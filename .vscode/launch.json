@@ -1,0 +1,137 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "Docker Synchronize",
+            "server": "http://craigrosegb",
+            "serverInstance": "BC",
+            "tenant": "default",
+            "authentication": "UserPassword",
+            "startupObjectId": 80002,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "Synchronize",
+            "breakOnError": true,
+            "breakOnRecordWrite": false,
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "launchBrowser": true
+        },
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "Docker ForceSync",
+            "server": "http://craigrosegb",
+            "serverInstance": "BC",
+            "tenant": "default",
+            "authentication": "UserPassword",
+            "startupObjectId": 80002,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "ForceSync",
+            "breakOnError": true,
+            "breakOnRecordWrite": false,
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "launchBrowser": true
+        },
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "Docker Recreate",
+            "server": "http://craigrosegb",
+            "serverInstance": "BC",
+            "tenant": "default",
+            "authentication": "UserPassword",
+            "startupObjectId": 80002,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "Recreate",
+            "breakOnError": true,
+            "breakOnRecordWrite": false,
+            "enableSqlInformationDebugger": true,
+            "enableLongRunningSqlStatements": true,
+            "longRunningSqlStatementsThreshold": 500,
+            "numberOfSqlStatements": 10,
+            "launchBrowser": true
+        },
+        //DEV
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R DEV Synchronize",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "Dev",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "Synchronize",
+            "launchBrowser": true
+        },
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R DEV ForceSync",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "Dev",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "ForceSync",
+            "launchBrowser": true
+        },
+        //QTQTEST
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R QTQTEST Synchronize",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "QTQTEST",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "Synchronize",
+            "launchBrowser": true
+        },
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R QTQTEST ForceSync",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "QTQTEST",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "ForceSync",
+            "launchBrowser": true
+        },
+        //Sandbox
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R SANDBOX Synchronize",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "Sandbox",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "Synchronize",
+            "launchBrowser": true
+        },
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R SANDBOX ForceSync",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "Sandbox",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "ForceSync",
+            "launchBrowser": true
+        }
+    ]
+}
