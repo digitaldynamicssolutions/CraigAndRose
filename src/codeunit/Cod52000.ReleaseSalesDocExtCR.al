@@ -39,7 +39,8 @@ codeunit 52000 ReleaseSalesDocExtCR
                             AllowNewLocation := false;
                     end;
                 until SalesLine.next = 0;
-            end;
+            end else
+                AllowNewLocation := false;
         end;
 
         if AllowNewLocation then begin
@@ -60,11 +61,13 @@ codeunit 52000 ReleaseSalesDocExtCR
             SalesLine.ModifyAll(Quantity, SalesLine.Quantity, true);
         end else begin
             CompanyInfo.Get;
+            CompanyInfo.TestField("Location Code");
             IF SalesHeader."Location Code" <> CompanyInfo."Location Code" then begin
                 SalesHeader.Validate("Location Code", CompanyInfo."Location Code");
                 SalesLine.Reset();
                 SalesLine.SetRange("Document Type", SalesHeader."Document Type");
                 SalesLine.SetRange("Document No.", SalesHeader."No.");
+                SalesLine.SetFilter("Location Code", '<>%1', '');
                 if SalesLine.FindSet(true, true) then begin
                     repeat
                         SalesLine.Validate("Location Code", CompanyInfo."Location Code");

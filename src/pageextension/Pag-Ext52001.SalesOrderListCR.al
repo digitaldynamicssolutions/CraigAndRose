@@ -20,5 +20,18 @@ pageextension 52001 "SalesOrderListCR" extends "Sales Order List"
                 ApplicationArea = All;
             }
         }
+
+        addafter("Assigned User ID")
+        {
+            field("Order Date"; Rec."Order Date")
+            {
+                ApplicationArea = All;
+            }
+        }
+
+        modify("Document Date")
+        {
+            Visible = false;
+        }
     }
 }
