@@ -52,13 +52,14 @@ codeunit 52000 ReleaseSalesDocExtCR
                 repeat
                     SalesLine.Validate("Location Code", newlocation);
                     if Location.get(newlocation) then begin
-                        if not Location."Require Shipment" then
+                        if not Location."Require Shipment" then begin
                             SalesLine.Validate("Qty. to Ship", SalesLine.Quantity);
+                            SalesLine.Validate("Qty. to Invoice", SalesLine.Quantity);
+                        end;
                     end;
                     Salesline.Modify(true);
                 until SalesLine.next = 0;
             end;
-            SalesLine.ModifyAll(Quantity, SalesLine.Quantity, true);
         end else begin
             CompanyInfo.Get;
             CompanyInfo.TestField("Location Code");
@@ -74,9 +75,7 @@ codeunit 52000 ReleaseSalesDocExtCR
                         Salesline.Modify(true);
                     until SalesLine.next = 0;
                 end;
-                SalesLine.ModifyAll(Quantity, SalesLine.Quantity, true);
             end;
-
         end;
     end;
 }
