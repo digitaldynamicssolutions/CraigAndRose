@@ -24,7 +24,7 @@ codeunit 52000 ReleaseSalesDocExtCR
             SalesLine.SetRange("Document Type", SalesHeader."Document Type");
             SalesLine.SetRange("Document No.", SalesHeader."No.");
             SalesLine.SetRange(Type, salesline.Type::Item);
-            SalesLine.SetFilter("Item Category Code", '<>%1' , '260'); //V1.0.0.1 26/02/21 -+
+            SalesLine.SetFilter("Item Category Code", '<>%1', '260'); //V1.0.0.1 26/02/21 -+
             if SalesLine.FindSet() then begin
                 repeat
                     if item.GET(SalesLine."No.") then begin
@@ -32,8 +32,9 @@ codeunit 52000 ReleaseSalesDocExtCR
                             if newlocation = '' then begin
                                 newlocation := item."Default Fulfillment Location";
                             end else begin
-                                if newlocation <> item."Default Fulfillment Location" then
+                                if newlocation <> item."Default Fulfillment Location" then begin
                                     AllowNewLocation := false;
+                                end;
                             end;
                         end else
                             AllowNewLocation := false;
@@ -48,6 +49,7 @@ codeunit 52000 ReleaseSalesDocExtCR
             SalesLine.Reset();
             SalesLine.SetRange("Document Type", SalesHeader."Document Type");
             SalesLine.SetRange("Document No.", SalesHeader."No.");
+            SalesLine.SetFilter("Location Code", '<>%1', ''); //V1.0.0.2 26/02/21 -+
             if SalesLine.FindSet(true, true) then begin
                 repeat
                     SalesLine.Validate("Location Code", newlocation);
@@ -68,7 +70,6 @@ codeunit 52000 ReleaseSalesDocExtCR
                 SalesLine.Reset();
                 SalesLine.SetRange("Document Type", SalesHeader."Document Type");
                 SalesLine.SetRange("Document No.", SalesHeader."No.");
-                SalesLine.SetFilter("Location Code", '<>%1', '');
                 if SalesLine.FindSet(true, true) then begin
                     repeat
                         SalesLine.Validate("Location Code", CompanyInfo."Location Code");
