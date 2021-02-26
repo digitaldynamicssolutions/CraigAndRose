@@ -24,6 +24,7 @@ codeunit 52000 ReleaseSalesDocExtCR
             SalesLine.SetRange("Document Type", SalesHeader."Document Type");
             SalesLine.SetRange("Document No.", SalesHeader."No.");
             SalesLine.SetRange(Type, salesline.Type::Item);
+            SalesLine.SetFilter("Item Category Code", '<>%1' , '260'); //V1.0.0.1 26/02/21 -+
             if SalesLine.FindSet() then begin
                 repeat
                     if item.GET(SalesLine."No.") then begin
@@ -34,7 +35,6 @@ codeunit 52000 ReleaseSalesDocExtCR
                                 if newlocation <> item."Default Fulfillment Location" then
                                     AllowNewLocation := false;
                             end;
-
                         end else
                             AllowNewLocation := false;
                     end;
