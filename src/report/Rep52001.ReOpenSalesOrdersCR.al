@@ -38,6 +38,7 @@ report 52001 "Data Update Report CR"
             trigger OnAfterGetRecord()
             var
                 WSL: Record "Warehouse Shipment Line";
+                PWSL: Record "Posted Whse. Shipment Line";
                 SalesRelease: Codeunit "Release Sales Document";
             begin
 
@@ -47,13 +48,16 @@ report 52001 "Data Update Report CR"
                 WSL.SetRange("Source No.", SalesHeader."No.");
                 WSL.SetRange("Location Code", 'HAL');
                 IF not WSL.FindFirst() then begin
-                    SalesRelease.Reopen(SalesHeader);
-                    C := c + 1;
-                    //    SalesHeader.Modify();
+                    PWSL.Reset;
+                    PWSL.SetRange("Source Document", WSL."Source Document"::"Sales Order");
+                    PWSL.SetRange("Source No.", SalesHeader."No.");
+                    PWSL.SetRange("Location Code", 'HAL');
+                    IF not PWSL.FindFirst() then begin
+                        SalesRelease.Reopen(SalesHeader);
+                        C := c + 1;
+                    end;
                 end;
-
             end;
-
         }
     }
     requestpage
