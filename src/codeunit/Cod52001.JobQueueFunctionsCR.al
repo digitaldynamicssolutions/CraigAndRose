@@ -12,11 +12,16 @@ codeunit 52001 "Job Queue Functions CR"
             SendOTMOrders();
         end;
 
-
         if rec."Parameter String" = 'OTMPOSTORDERS' then begin
             PostOTMOrders();
-
         end;
+
+        //V1.0.0.5 02/03/21 -
+        if rec."Parameter String" = 'OTMRELEASEORDERS' then begin
+            ReleaseOTMOrders();
+        end;
+        //V1.0.0.5 02/03/21 +
+
     end;
 
     local procedure SendOTMOrders()
@@ -138,5 +143,62 @@ codeunit 52001 "Job Queue Functions CR"
                 end;
             until SalesHeader.Next = 0;
         end;
+    end;
+
+    local procedure ReleaseOTMOrders()
+    //V1.0.0.5 02/03/21 -+
+    var
+        CompanyInfo: Record "Company Information";
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Item: Record Item;
+        SalesSetup: Record "Sales & Receivables Setup";
+        ReleaseSalesDocument: Codeunit "Release Sales Document";
+        AutoRelease: Boolean;
+        ToDate: Date;
+
+    begin
+
+        SalesSetup.GET;
+        CompanyInfo.GET;
+        CompanyInfo.TestField("Location Code");
+        ToDate := CalcDate('-1D', Today);
+
+        //Find Orders
+        SalesHeader.Reset();
+        SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+        SalesHeader.SetRange("Location Code", CompanyInfo."Location Code");
+        SalesHeader.SetRange(Status, SalesHeader.Status::Open);
+        SalesHeader.SetFilter("Order Date", '..%1', ToDate);
+        if SalesHeader.FindSet(true, false) then begin
+            repeat
+
+                if (SalesHeader."Ship-to Name" <> '') and (SalesHeader."Ship-to Address" <> '') and (SalesHeader."Ship-to Post Code" <> '') and (SalesHeader."Ship-to Country/Region Code" <> '') then begin
+                    AutoRelease := true;
+                    SalesLine.Reset();
+                    SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                    SalesLine.SetRange("Document No.", SalesHeader."No.");
+                    SalesLine.SetRange(type, SalesLine.type::Item);
+                    SalesLine.SetFilter("Item Category Code", '<>%1', '260');
+                    if SalesLine.FindSet(false, false) then begin
+                        repeat
+                            if AutoRelease then begin
+                                if item.get(SalesLine."No.") then begin
+                                    if item."Default Fulfillment Location" = SalesSetup."OTM Location Code" then
+                                        AutoRelease := true
+                                    else
+                                        AutoRelease := false;
+                                end;
+                            end;
+                        until SalesLine.Next = 0;
+                    end;
+
+                    if AutoRelease then begin
+                        ReleaseSalesDocument.Run(SalesHeader)
+                    end;
+                end;
+            until SalesHeader.next = 0;
+        end;
+
     end;
 }

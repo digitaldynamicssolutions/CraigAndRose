@@ -46,6 +46,7 @@ codeunit 52000 ReleaseSalesDocExtCR
 
         if AllowNewLocation then begin
             SalesHeader.Validate("Location Code", newlocation);
+            SalesHeader.Validate("Shipping Advice", SalesHeader."Shipping Advice"::Complete); //V1.0.0.5 02/03/21 -+
             SalesLine.Reset();
             SalesLine.SetRange("Document Type", SalesHeader."Document Type");
             SalesLine.SetRange("Document No.", SalesHeader."No.");
