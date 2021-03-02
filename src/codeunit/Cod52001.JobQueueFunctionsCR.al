@@ -180,6 +180,7 @@ codeunit 52001 "Job Queue Functions CR"
                     SalesLine.SetRange("Document No.", SalesHeader."No.");
                     SalesLine.SetRange(type, SalesLine.type::Item);
                     SalesLine.SetFilter("Item Category Code", '<>%1', '260');
+                    SalesLine.SetFilter("Outstanding Quantity", '<>%1', 0);
                     if SalesLine.FindSet(false, false) then begin
                         repeat
                             if AutoRelease then begin
@@ -191,10 +192,11 @@ codeunit 52001 "Job Queue Functions CR"
                                 end;
                             end;
                         until SalesLine.Next = 0;
-                    end;
+                    end else
+                      AutoRelease := false;
 
                     if AutoRelease then begin
-                        ReleaseSalesDocument.Run(SalesHeader)
+                        ReleaseSalesDocument.Run(SalesHeader);
                     end;
                 end;
             until SalesHeader.next = 0;
