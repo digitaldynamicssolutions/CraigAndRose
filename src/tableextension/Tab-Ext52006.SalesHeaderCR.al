@@ -18,5 +18,19 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(52002; "Progress Status CR"; enum "Order Progress CR")
+        {
+            Caption = 'Progress Status';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = max("Order Progress Entry CR".Status WHERE("Entry No." = field("Last Progress Entry No. CR")));
+        }
+        field(5200; "Last Progress Entry No. CR"; Integer)
+        {
+            Caption = 'Last Progress Entry No.';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = max("Order Progress Entry CR"."Entry No." WHERE("Original Order No." = FIELD("No.")));
+        }
     }
 }

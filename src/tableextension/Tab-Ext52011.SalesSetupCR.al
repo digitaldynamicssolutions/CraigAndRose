@@ -1,3 +1,6 @@
+/// <summary>
+/// TableExtension SalesSetupCR (ID 52011) extends Record Sales Receivables Setup.
+/// </summary>
 tableextension 52011 "SalesSetupCR" extends "Sales & Receivables Setup"
 {
     fields

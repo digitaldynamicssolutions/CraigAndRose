@@ -83,6 +83,18 @@
             "schemaUpdateMode": "ForceSync",
             "launchBrowser": true
         },
+        {
+            "type": "al",
+            "request": "launch",
+            "name": "C&R DEV ReCreate",
+            "tenant": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
+            "environmentType": "Sandbox",
+            "environmentName": "Dev",
+            "startupObjectId": 2500,
+            "startupObjectType": "Page",
+            "schemaUpdateMode": "Recreate",
+            "launchBrowser": true
+        },
         //QTQTEST
         {
             "type": "al",

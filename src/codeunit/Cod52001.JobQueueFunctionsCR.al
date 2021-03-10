@@ -106,7 +106,6 @@ codeunit 52001 "Job Queue Functions CR"
                 SalesHeader.Modify(false);
                 SalesPost.Run(SalesHeader);
             until SalesHeader.Next = 0;
-
         end;
     end;
 

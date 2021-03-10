@@ -1,52 +1,24 @@
 /// <summary>
-/// PageExtension SalesOrderListCR (ID 52001) extends Record Sales Order List.
+/// PageExtension "SalesOrderPageCR" (ID 52003) extends Record Sales Order.
 /// </summary>
-pageextension 52001 "SalesOrderListCR" extends "Sales Order List"
+pageextension 52003 SalesOrderPageCR extends "Sales Order"
 {
     layout
     {
         addafter(Status)
         {
-            field("Sent to OTM"; Rec."Sent to OTM")
+            field("Progress Status CR"; Rec."Progress Status CR")
             {
                 ApplicationArea = All;
-            }
-        }
-
-        addafter("Sent to OTM")
-        {
-            field("Sent to OTM DateTime"; Rec."Sent to OTM DateTime")
-            {
-                ApplicationArea = All;
-            }
-        }
-
-        addafter("Assigned User ID")
-        {
-            field("Order Date"; Rec."Order Date")
-            {
-                ApplicationArea = All;
-            }
-        }
-
-        modify("Document Date")
-        {
-            Visible = false;
-        }
-
-        addafter(Status)
-        {
-            field("Order Progress CR"; Rec."Progress Status CR")
-            {
-                ApplicationArea = All;
+                ToolTip = 'This displays the current shipping progress of this order';
                 StyleExpr = 'Strong';
             }
         }
-
     }
+
     actions
     {
-        addbefore(Dimensions)
+        addafter(Invoices)
         {
             action(OrderProgressEntriesCR)
             {
@@ -69,4 +41,5 @@ pageextension 52001 "SalesOrderListCR" extends "Sales Order List"
             }
         }
     }
+
 }
