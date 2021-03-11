@@ -42,8 +42,16 @@ enum 52000 "Order Progress CR"
     {
         Caption = 'Shipment Cancelled';
     }
-        value(10; "Pick Cancelled")
+    value(10; "Pick Cancelled")
     {
         Caption = 'Pick Cancelled';
+    }
+    value(11; "On Hold")
+    {
+        Caption = 'On Hold';
+    }
+    value(12; "To Cancel")
+    {
+        Caption = 'To Cancel';
     }
 }

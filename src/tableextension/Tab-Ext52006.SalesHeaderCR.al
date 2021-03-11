@@ -25,12 +25,52 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
             FieldClass = FlowField;
             CalcFormula = max("Order Progress Entry CR".Status WHERE("Entry No." = field("Last Progress Entry No. CR")));
         }
-        field(5200; "Last Progress Entry No. CR"; Integer)
+        field(52003; "Last Progress Entry No. CR"; Integer)
         {
             Caption = 'Last Progress Entry No.';
             Editable = false;
             FieldClass = FlowField;
             CalcFormula = max("Order Progress Entry CR"."Entry No." WHERE("Original Order No." = FIELD("No.")));
         }
+        field(52004; "Progress Status DateTime CR"; DateTime)
+        {
+            Caption = 'Progress Status DateTime';
+            Editable = false;
+            FieldClass = FlowField;
+            CalcFormula = max("Order Progress Entry CR"."Status DateTime" WHERE("Entry No." = field("Last Progress Entry No. CR")));
+        }
+        field(52005; "CS On Hold CR"; Boolean)
+        {
+            Caption = 'CS On Hold';
+            DataClassification = ToBeClassified;
+
+            trigger OnValidate()
+            var
+                OrderProgressSub: Codeunit "Order Progress Sub. CR";
+                ProgressStatus: Enum "Order Progress CR";
+            begin
+                if "CS On Hold CR" then begin
+                    TestField(Status, Status::Open);
+                    OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"On Hold", "Location Code", "External Document No.");
+                end;
+            end;
+        }
+        field(52006; "CS To Cancel CR"; Boolean)
+        {
+            Caption = 'CS To Cancel';
+            DataClassification = ToBeClassified;
+
+            trigger OnValidate()
+            var
+                OrderProgressSub: Codeunit "Order Progress Sub. CR";
+                ProgressStatus: Enum "Order Progress CR";
+            begin
+                if "CS To Cancel CR" then begin
+                    TestField(Status, Status::Open);
+                    OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"To Cancel", "Location Code", "External Document No.");
+                end;
+            end;
+        }
+
     }
 }
