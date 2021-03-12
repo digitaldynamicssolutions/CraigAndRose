@@ -51,7 +51,7 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
             begin
                 if "CS On Hold CR" then begin
                     TestField(Status, Status::Open);
-                    OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"On Hold", "Location Code", "External Document No.");
+                    OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"On Hold", "Location Code", "External Document No.",'');
                 end;
             end;
         }
@@ -67,7 +67,7 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
             begin
                 if "CS To Cancel CR" then begin
                     TestField(Status, Status::Open);
-                    OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"To Cancel", "Location Code", "External Document No.");
+                    OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"To Cancel", "Location Code", "External Document No.",'');
                 end;
             end;
         }

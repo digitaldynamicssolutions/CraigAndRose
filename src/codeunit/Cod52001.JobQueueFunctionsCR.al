@@ -169,6 +169,10 @@ codeunit 52001 "Job Queue Functions CR"
         SalesHeader.SetRange("Location Code", CompanyInfo."Location Code");
         SalesHeader.SetRange(Status, SalesHeader.Status::Open);
         SalesHeader.SetFilter("Order Date", '..%1', ToDate);
+        //DOC V1.0.0.7 -
+        SalesHeader.SetRange("CS On Hold CR", false);
+        SalesHeader.SetRange("CS To Cancel CR", false);
+        //DOC V1.0.0.7 +
         if SalesHeader.FindSet(true, false) then begin
             repeat
 

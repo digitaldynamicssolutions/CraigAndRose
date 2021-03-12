@@ -2,7 +2,7 @@
   "id": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
   "name": "Internal C&R Customisation",
   "publisher": "DDS",
-  "version": "1.0.0.6",
+  "version": "1.0.0.7",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -10,7 +10,12 @@
   "help": "",
   "url": "",
   "logo": "",
-  "dependencies": [],
+  "dependencies": [{
+    "id": "b9207dc8-e910-4c0d-85fc-7b7ec3e03112",
+    "name": "Clever Handheld for Warehousing",
+    "publisher": "Clever Dynamics",
+    "version": "7.3.6.8576"}
+  ],
   "screenshots": [],
   "platform": "17.0.20458.20517",
   "application": "17.0.0.0",

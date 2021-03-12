@@ -18,6 +18,9 @@ codeunit 52000 ReleaseSalesDocExtCR
     /// SalesReleaseFulfillmentLocation.
     /// </summary>
     /// <param name="SalesHeader">VAR Record "Sales Header".</param>
+    
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnBeforeReleaseSalesDoc', '', true, true)]
+    
     procedure SalesReleaseFulfillmentLocation(var SalesHeader: Record "Sales Header")
     var
         SalesLine: Record "Sales Line";

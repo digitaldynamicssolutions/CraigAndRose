@@ -14,7 +14,8 @@ codeunit 52003 "Order Progress Sub. CR"
     /// <param name="pProgressStatus">Enum "Order Progress CR".</param>
     /// <param name="pLocationCode">code[10].</param>
     /// <param name="pExtDocNo">Code[35].</param>
-    procedure InsertOrderProgress(var pDocNo: Code[20]; pOrderNo: Code[20]; pProgressStatus: Enum "Order Progress CR"; pLocationCode: code[10]; pExtDocNo: Code[35]);
+    /// <param name="pUserID">Code[50].</param>
+    procedure InsertOrderProgress(var pDocNo: Code[20]; pOrderNo: Code[20]; pProgressStatus: Enum "Order Progress CR"; pLocationCode: code[10]; pExtDocNo: Code[35]; pUserID: Code[50]);
     var
         OrderProgressEntry: Record "Order Progress Entry CR";
     begin
@@ -22,7 +23,10 @@ codeunit 52003 "Order Progress Sub. CR"
         OrderProgressEntry."Document No." := pDocNo;
         OrderProgressEntry.Status := pProgressStatus;
         OrderProgressEntry."Original Order No." := pOrderNo;
-        OrderProgressEntry."User ID" := UserId;
+        if pUserID <> '' then
+            OrderProgressEntry."User ID" := pUserId
+        else
+            OrderProgressEntry."User ID" := UserId;
         OrderProgressEntry."Location Code" := pLocationCode;
         OrderProgressEntry."External Document No." := pExtDocNo;
         OrderProgressEntry.Insert(true);
@@ -43,7 +47,7 @@ codeunit 52003 "Order Progress Sub. CR"
 
         if SalesHeader.Get(Rec."Document Type", Rec."No.") then begin
             if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
-                InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::Created, SalesHeader."Location Code", SalesHeader."External Document No.");
+                InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::Created, SalesHeader."Location Code", SalesHeader."External Document No.", '');
             end;
         end;
     end;
@@ -59,7 +63,7 @@ codeunit 52003 "Order Progress Sub. CR"
         ProgressStatus: Enum "Order Progress CR";
     begin
         if SalesHeader.get(SalesHeader."Document Type"::Order, Rec."Order No.") then begin
-            InsertOrderProgress(Rec."No.", SalesHeader."No.", ProgressStatus::Invoiced, SalesHeader."Location Code", SalesHeader."External Document No.");
+            InsertOrderProgress(Rec."No.", SalesHeader."No.", ProgressStatus::Invoiced, SalesHeader."Location Code", SalesHeader."External Document No.", '');
         end;
     end;
 
@@ -80,7 +84,7 @@ codeunit 52003 "Order Progress Sub. CR"
         RegWhseActivityHdr.SetRange("Whse. Activity No.", rec."No.");
         if RegWhseActivityHdr.IsEmpty then begin
             if SalesHeader.get(SalesHeader."Document Type"::Order, rec."Source No.") then begin
-                InsertOrderProgress(rec."No.", SalesHeader."No.", ProgressStatus::"Pick Cancelled", SalesHeader."Location Code", SalesHeader."External Document No.");
+                InsertOrderProgress(rec."No.", SalesHeader."No.", ProgressStatus::"Pick Cancelled", SalesHeader."Location Code", SalesHeader."External Document No.", '');
             end;
         end
 
@@ -95,6 +99,7 @@ codeunit 52003 "Order Progress Sub. CR"
     var
         ProgressStatus: Enum "Order Progress CR";
         WhseActiviyLine: Record "Warehouse Activity Line";
+        WhseActivityHeader: Record "Warehouse Activity Header"; //DOC 1.0.0.7 -+
         OrderProgressEntry: Record "Order Progress Entry CR";
     begin
         if WarehouseActivityLine.IsTemporary then
@@ -104,10 +109,11 @@ codeunit 52003 "Order Progress Sub. CR"
         OrderProgressEntry.SetRange(Status, OrderProgressEntry.Status::"In Picking");
         if OrderProgressEntry.IsEmpty then begin
             if SalesHeader.get(SalesHeader."Document Type"::Order, WarehouseActivityLine."Source No.") then begin
-                InsertOrderProgress(WarehouseActivityLine."No.", SalesHeader."No.", ProgressStatus::"In Picking", SalesHeader."Location Code", SalesHeader."External Document No.");
+                InsertOrderProgress(WarehouseActivityLine."No.", SalesHeader."No.", ProgressStatus::"In Picking", SalesHeader."Location Code", SalesHeader."External Document No.", WarehouseActivityLine."Assigned HH User CHHWTMN");
             end;
         end;
     end;
+
 
     [EventSubscriber(ObjectType::Table, Database::"Registered Whse. Activity Line", 'OnAfterInsertEvent', '', true, true)]
 
@@ -128,7 +134,7 @@ codeunit 52003 "Order Progress Sub. CR"
             OrderProgressEntry.SetRange(Status, OrderProgressEntry.Status::Picked);
             if OrderProgressEntry.IsEmpty then begin
                 if SalesHeader.get(SalesHeader."Document Type"::Order, Rec."Source No.") then begin
-                    InsertOrderProgress(RegWhseActivityHdr."Whse. Activity No.", SalesHeader."No.", ProgressStatus::Picked, SalesHeader."Location Code", SalesHeader."External Document No.");
+                    InsertOrderProgress(RegWhseActivityHdr."Whse. Activity No.", SalesHeader."No.", ProgressStatus::Picked, SalesHeader."Location Code", SalesHeader."External Document No.", '');
                 end;
             end;
         end;
@@ -147,7 +153,7 @@ codeunit 52003 "Order Progress Sub. CR"
         if SalesHeader.IsTemporary then
             exit;
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
-            InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::Released, SalesHeader."Location Code", SalesHeader."External Document No.");
+            InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::Released, SalesHeader."Location Code", SalesHeader."External Document No.", '');
         end;
     end;
 
@@ -165,7 +171,7 @@ codeunit 52003 "Order Progress Sub. CR"
             exit;
 
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
-            InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::"Re-Opened", SalesHeader."Location Code", SalesHeader."External Document No.");
+            InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::"Re-Opened", SalesHeader."Location Code", SalesHeader."External Document No.", '');
         end;
     end;
 
@@ -186,7 +192,7 @@ codeunit 52003 "Order Progress Sub. CR"
         if WarehouseShipmentLine.FindFirst() then begin
             if SalesHeader.Get(SalesHeader."Document Type"::Order, WarehouseShipmentLine."Source No.") then begin
                 if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
-                    InsertOrderProgress(rec."No.", SalesHeader."No.", ProgressStatus::"Shipment Cancelled", SalesHeader."Location Code", SalesHeader."External Document No.");
+                    InsertOrderProgress(rec."No.", SalesHeader."No.", ProgressStatus::"Shipment Cancelled", SalesHeader."Location Code", SalesHeader."External Document No.", '');
                 end;
             end;
         end;
@@ -209,7 +215,7 @@ codeunit 52003 "Order Progress Sub. CR"
         WarehouseShipmentLine.SetRange("No.", WarehouseShipmentHeader."No.");
         if WarehouseShipmentLine.FindFirst() then begin
             if SalesHeader.get(SalesHeader."Document Type"::Order, WarehouseShipmentLine."Source No.") then begin
-                InsertOrderProgress(WarehouseShipmentHeader."No.", SalesHeader."No.", ProgressStatus::"Shipment Created", SalesHeader."Location Code", SalesHeader."External Document No.");
+                InsertOrderProgress(WarehouseShipmentHeader."No.", SalesHeader."No.", ProgressStatus::"Shipment Created", SalesHeader."Location Code", SalesHeader."External Document No.", '');
             end;
         end;
     end;
@@ -225,7 +231,7 @@ codeunit 52003 "Order Progress Sub. CR"
         ProgressStatus: Enum "Order Progress CR";
     begin
         if SalesHeader.get(SalesHeader."Document Type"::Order, Rec."Order No.") then begin
-            InsertOrderProgress(Rec."No.", SalesHeader."No.", ProgressStatus::Shipped, SalesHeader."Location Code", SalesHeader."External Document No.");
+            InsertOrderProgress(Rec."No.", SalesHeader."No.", ProgressStatus::Shipped, SalesHeader."Location Code", SalesHeader."External Document No.", '');
         end;
     end;
 
