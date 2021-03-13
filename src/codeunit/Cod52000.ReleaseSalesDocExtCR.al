@@ -3,24 +3,13 @@
 /// </summary>
 codeunit 52000 ReleaseSalesDocExtCR
 {
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnBeforeReleaseSalesDoc', '', true, true)]
-
-    /// <summary>
-    /// CheckHeaderFields.
-    /// </summary>
-    /// <param name="SalesHeader">VAR Record "Sales Header".</param>
-    procedure CheckHeaderFields(var SalesHeader: Record "Sales Header")
-    begin
-        SalesHeader.TestField("CS On Hold CR", false);
-        SalesHeader.TestField("CS To Cancel CR", false);
-    end;
     /// <summary>
     /// SalesReleaseFulfillmentLocation.
     /// </summary>
     /// <param name="SalesHeader">VAR Record "Sales Header".</param>
-    
+
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnBeforeReleaseSalesDoc', '', true, true)]
-    
+
     procedure SalesReleaseFulfillmentLocation(var SalesHeader: Record "Sales Header")
     var
         SalesLine: Record "Sales Line";
@@ -30,6 +19,9 @@ codeunit 52000 ReleaseSalesDocExtCR
         newlocation: Code[20];
         AllowNewLocation: Boolean;
     begin
+        SalesHeader.TestField("CS On Hold CR", false);
+        SalesHeader.TestField("CS To Cancel CR", false);
+
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
             AllowNewLocation := true;
             SalesLine.Reset();
