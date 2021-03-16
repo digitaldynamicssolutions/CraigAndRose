@@ -5,7 +5,7 @@ pageextension 52004 "PostedSalesInvoicePageCR" extends "Posted Sales Invoice"
 {
     actions
     {
-        addafter(Invoice)
+        addafter("&Navigate")
         {
             action(OrderProgressEntriesCR)
             {
@@ -13,7 +13,7 @@ pageextension 52004 "PostedSalesInvoicePageCR" extends "Posted Sales Invoice"
                 ApplicationArea = All;
                 Image = EntriesList;
                 Promoted = true;
-                PromotedCategory = Category4;
+                PromotedCategory = Category5;
                 PromotedIsBig = true;
 
                 trigger OnAction()

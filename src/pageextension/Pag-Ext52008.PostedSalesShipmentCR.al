@@ -1,20 +1,20 @@
 /// <summary>
-/// PageExtension PostedSalesInvoicetListCR (ID 52005) extends Record Posted Sales Invoices.
+/// PageExtension PostedSalesShipmentCR (ID 52008) extends Record Posted Sales Shipment.
 /// </summary>
-pageextension 52005 "PostedSalesInvoicetListCR" extends "Posted Sales Invoices"
+pageextension 52008 "PostedSalesShipmentCR" extends "Posted Sales Shipment"
 {
     actions
     {
-        addafter(Navigate)
+        addafter("&Shipment")
         {
             action(OrderProgressEntriesCR)
             {
                 Caption = '&Order Progress Entries';
                 ApplicationArea = All;
                 Image = EntriesList;
-                Promoted = true;
-                PromotedCategory = Category5;
-                PromotedIsBig = true;
+                //Promoted = true;
+                //PromotedCategory = Category6;
+                //PromotedIsBig = true;
 
                 trigger OnAction()
                 var

@@ -42,6 +42,15 @@ pageextension 52001 "SalesOrderListCR" extends "Sales Order List"
                 StyleExpr = 'Strong';
             }
         }
+        addafter("Order Progress CR")
+        {
+            field("Progress Status DateTime CR"; Rec."Progress Status DateTime CR")
+            {
+                ApplicationArea = All;
+                StyleExpr = 'Strong';
+            }
+
+        }
 
     }
     actions
@@ -67,7 +76,7 @@ pageextension 52001 "SalesOrderListCR" extends "Sales Order List"
                     OrderProgressEntriesList.Run();
                 end;
             }
-        
+
             action(OpenShipmentCR)
             {
                 Caption = '&Open Shipment';

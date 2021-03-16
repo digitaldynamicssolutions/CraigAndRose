@@ -12,9 +12,18 @@ codeunit 52004 "Sales Functions CR"
     procedure CalcAvailInv(var pItemCode: Code[20]; pLocationCode: Code[10]; pRequired: Decimal)
     /// <param name="pRequired">Decimal.</param>
     var
-    item: Record item;
-    SalesLine: Record "Sales Line";
+        AvailQty: Decimal;
+        item: Record item;
+        SalesLine: Record "Sales Line";
     begin
+        if item.get(pItemCode) then begin
+            item.SetFilter("Location Filter", pLocationCode);
+            
+
+
+
+
+        end;
 
     end;
 }
