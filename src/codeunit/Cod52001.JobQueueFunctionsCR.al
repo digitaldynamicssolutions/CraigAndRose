@@ -248,7 +248,8 @@ codeunit 52001 "Job Queue Functions CR"
                                 if item.Get(SalesLine."No.") then begin
                                     if item.type = item.type::Inventory then begin
                                         AvailQty := SalesFunctionsCR.CalcAvailInv(SalesLine."No.", SalesLine."Location Code", SalesLine."Outstanding Quantity");
-                                        if SalesLine."Outstanding Quantity" >= AvailQty then begin
+                                        AvailQty := AvailQty + SalesLine."Outstanding Quantity"; //V1.0.0.11 -+
+                                        if SalesLine."Outstanding Quantity" > AvailQty then begin
                                             SalesLine.validate("Warehouse Stock Issue", true);
                                         end else begin
                                             SalesLine.validate("Warehouse Stock Issue", false);
