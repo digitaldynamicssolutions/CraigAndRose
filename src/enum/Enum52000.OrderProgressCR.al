@@ -54,4 +54,8 @@ enum 52000 "Order Progress CR"
     {
         Caption = 'To Cancel';
     }
+    value(13; "Stock Issue")
+    {
+        Caption = 'Stock Issue';
+    }
 }

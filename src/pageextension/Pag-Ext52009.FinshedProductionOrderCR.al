@@ -1,5 +1,5 @@
 /// <summary>
-/// PageExtension FinshedProductionOrderCR (ID 52009) extends Record Finished Production Order.
+/// PageExtension "FinshedProductionOrderCR" (ID 52009) extends Record Finished Production Order.
 /// </summary>
 pageextension 52009 FinshedProductionOrderCR extends "Finished Production Order"
 {

@@ -10,5 +10,12 @@ tableextension 52005 "SalesLineArchiveCR" extends "Sales Line Archive"
             Caption = 'Sent to OTM';
             DataClassification = ToBeClassified;
         }
+        //V1.0.0.10
+        field(52001; "Warehouse Stock Issue"; Boolean)
+        {
+            Caption = 'Warehouse Stock Issue';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

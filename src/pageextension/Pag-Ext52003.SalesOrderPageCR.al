@@ -23,6 +23,7 @@ pageextension 52003 SalesOrderPageCR extends "Sales Order"
             field("CS On Hold CR"; Rec."CS On Hold CR")
             {
                 ApplicationArea = All;
+                ToolTip = 'Set this to mark the order as "On Hold", this will prevent any automatic processing or document creation';
                 trigger OnValidate()
                 begin
                     CurrPage.Update();
@@ -32,6 +33,7 @@ pageextension 52003 SalesOrderPageCR extends "Sales Order"
             field("CS To Cancel CR"; Rec."CS To Cancel CR")
             {
                 ApplicationArea = All;
+                ToolTip = 'Set this to mark the order as "To Cancel", this will prevent any automatic processing or document creation';
                 trigger OnValidate()
                 begin
                     CurrPage.Update();

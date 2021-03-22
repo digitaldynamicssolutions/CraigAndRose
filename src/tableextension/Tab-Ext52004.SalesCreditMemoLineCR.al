@@ -11,5 +11,12 @@ tableextension 52004 "SalesCreditMemoLineCR" extends "Sales Cr.Memo Line"
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        //V1.0.0.10
+        field(52001; "Warehouse Stock Issue"; Boolean)
+        {
+            Caption = 'Warehouse Stock Issue';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

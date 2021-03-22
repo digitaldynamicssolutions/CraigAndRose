@@ -55,7 +55,6 @@ table 52000 "Order Progress Entry CR"
             Caption = 'Package Tracking Number';
             FieldClass = FlowField;
             CalcFormula = lookup("Sales Shipment Header"."Package Tracking No." where("External Document No." = field("External Document No.")));
-            
             Editable = false;
         }
     }

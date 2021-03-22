@@ -99,7 +99,7 @@ report 52000 "OTM Sales Lines To Ship CR"
     var
         SalesHeader: Record "Sales Header";
         ShipName: Text[50];
-        ShipAddr: Text[50];
+        ShipAddr: Text[100];
         ShipAddr2: Text[50];
         ShipCity: Text[30];
         ShipPostcode: Code[20];

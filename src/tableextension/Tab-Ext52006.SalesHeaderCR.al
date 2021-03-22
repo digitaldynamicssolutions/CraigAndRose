@@ -71,6 +71,5 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
                 end;
             end;
         }
-
     }
 }

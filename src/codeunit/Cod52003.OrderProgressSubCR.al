@@ -23,12 +23,18 @@ codeunit 52003 "Order Progress Sub. CR"
         OrderProgressEntry."Document No." := pDocNo;
         OrderProgressEntry.Status := pProgressStatus;
         OrderProgressEntry."Original Order No." := pOrderNo;
+        
         if pUserID <> '' then
             OrderProgressEntry."User ID" := pUserId
         else
             OrderProgressEntry."User ID" := UserId;
         OrderProgressEntry."Location Code" := pLocationCode;
-        OrderProgressEntry."External Document No." := pExtDocNo;
+        
+        if pExtDocNo <> '' then
+          OrderProgressEntry."External Document No." := pExtDocNo
+        else
+        OrderProgressEntry."External Document No." := 'N/A';
+        
         OrderProgressEntry.Insert(true);
     end;
 

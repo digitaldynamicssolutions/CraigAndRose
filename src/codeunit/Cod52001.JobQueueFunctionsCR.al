@@ -22,6 +22,10 @@ codeunit 52001 "Job Queue Functions CR"
         end;
         //V1.0.0.5 02/03/21 +
 
+        //V1.0.0.10 -
+        if rec."Parameter String" = 'PROCESSWHSEORDERS' then begin
+            CreateSOWhseDocuments();
+        end;
     end;
 
     local procedure SendOTMOrders()
@@ -196,7 +200,7 @@ codeunit 52001 "Job Queue Functions CR"
                             end;
                         until SalesLine.Next = 0;
                     end else
-                      AutoRelease := false;
+                        AutoRelease := false;
 
                     if AutoRelease then begin
                         ReleaseSalesDocument.Run(SalesHeader);
@@ -204,6 +208,100 @@ codeunit 52001 "Job Queue Functions CR"
                 end;
             until SalesHeader.next = 0;
         end;
+    end;
 
+    //V1.0.0.10
+    local procedure CreateSOWhseDocuments()
+    var
+        Location: Record Location;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        item: Record Item;
+        WarehouseShipmentLine: Record "Warehouse Shipment Line";
+        WarehouseShipmentHeader: Record "Warehouse Shipment Header";
+        WarehouseActivityLine: Record "Warehouse Activity Line";
+        SalesFunctionsCR: Codeunit "Sales Functions CR";
+        GetSourceDocOutbound: Codeunit "Get Source Doc. Outbound";
+        ReleaseWarehouseDoc: Codeunit "Whse.-Shipment Release";
+        OrderProgress: Codeunit "Order Progress Sub. CR";
+        CreateDocument: Boolean;
+        AvailQty: Decimal;
+        ProgressStatus: Enum "Order Progress CR";
+
+    begin
+        Location.SetRange("Auto. Create Shipment & Pick", true);
+        if Location.FindSet(false, false) then begin
+            repeat
+                //SalesHeader.SetCurrentKey()
+                SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+                SalesHeader.SetRange(Status, SalesHeader.Status::Released);
+                SalesHeader.SetRange("Location Code", Location.Code);
+                SalesHeader.SetRange("Shipping Advice", SalesHeader."Shipping Advice"::Complete);
+                if SalesHeader.FindSet(false, false) then begin
+                    repeat
+                        SalesLine.reset;
+                        salesline.SetRange("Document Type", SalesHeader."Document Type");
+                        SalesLine.SetRange("Document No.", SalesHeader."No.");
+                        SalesLine.SetRange(Type, SalesLine.Type::Item);
+                        if SalesLine.FindSet(false, false) then begin
+                            repeat
+                                if item.Get(SalesLine."No.") then begin
+                                    if item.type = item.type::Inventory then begin
+                                        AvailQty := SalesFunctionsCR.CalcAvailInv(SalesLine."No.", SalesLine."Location Code", SalesLine."Outstanding Quantity");
+                                        if SalesLine."Outstanding Quantity" >= AvailQty then begin
+                                            SalesLine.validate("Warehouse Stock Issue", true);
+                                        end else begin
+                                            SalesLine.validate("Warehouse Stock Issue", false);
+                                        end;
+                                        SalesLine.Modify(false);
+                                    end;
+                                end;
+                            until SalesLine.next = 0;
+                        end;
+
+                        SalesLine.reset;
+                        salesline.SetRange("Document Type", SalesHeader."Document Type");
+                        SalesLine.SetRange("Document No.", SalesHeader."No.");
+                        SalesLine.SetRange(Type, SalesLine.Type::Item);
+                        SalesLine.SetRange("Warehouse Stock Issue", true);
+                        if SalesLine.IsEmpty then begin
+                            //Create Warehouse Shipment
+                            WarehouseShipmentLine.reset;
+                            WarehouseShipmentLine.SetRange("Source Type", Database::"Sales Line");
+                            WarehouseShipmentLine.SetRange("Source Subtype", 1);
+                            WarehouseShipmentLine.SetRange("Source No.", SalesHeader."No.");
+                            if WarehouseShipmentLine.IsEmpty then begin
+                                GetSourceDocOutbound.CreateFromSalesOrderHideDialog(SalesHeader);
+                            end;
+
+                            //Create Warehouse Pick
+                            WarehouseShipmentLine.reset;
+                            WarehouseShipmentLine.SetRange("Source Type", Database::"Sales Line");
+                            WarehouseShipmentLine.SetRange("Source Subtype", 1);
+                            WarehouseShipmentLine.SetRange("Source No.", SalesHeader."No.");
+                            if WarehouseShipmentLine.FindFirst then begin
+                                if WarehouseShipmentHeader.Get(WarehouseShipmentLine."No.") then begin
+                                    ReleaseWarehouseDoc.Release(WarehouseShipmentHeader);
+
+                                    WarehouseActivityLine.SETRANGE("Source Document", WarehouseActivityLine."Source Document"::"Sales Order");
+                                    WarehouseActivityLine.SETRANGE("Source No.", SalesHeader."No.");
+                                    if WarehouseActivityLine.ISEMPTY then begin
+                                        WarehouseShipmentLine.SetHideValidationDialog(true);
+                                        WarehouseShipmentLine.CreatePickDoc(WarehouseShipmentLine, WarehouseShipmentHeader);
+                                    end;
+                                end;
+                            end;
+                        end else begin
+                            SalesHeader.CalcFields("Progress Status CR");
+                            if SalesHeader."Progress Status CR" <> SalesHeader."Progress Status CR"::"Stock Issue" then begin
+                                SalesHeader."Progress Status CR" := SalesHeader."Progress Status CR"::"Stock Issue";
+                                SalesHeader.Modify(false);
+                                OrderProgress.InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::"Stock Issue", SalesHeader."Location Code", SalesHeader."External Document No.", '');
+                            end
+                        end;
+                    until SalesHeader.Next = 0;
+                end;
+            until Location.Next = 0;
+        end;
     end;
 }
