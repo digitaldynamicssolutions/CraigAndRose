@@ -12,6 +12,10 @@ codeunit 52002 "Data Functions CR"
             PickClearDown();
         end;
 
+        if Rec."Parameter String" = 'BINCONTENTUPD' then begin
+            UpdateBinContent();
+        end;
+
     end;
 
     local procedure PickClearDown()
@@ -51,6 +55,30 @@ codeunit 52002 "Data Functions CR"
             until wsh.next = 0;
         end;
 
+    end;
+
+    local procedure UpdateBinContent()
+    var
+        Bin: Record Bin;
+        BinContent: Record "Bin Content";
+    begin
+
+        Bin.Reset();
+        Bin.SetFilter("Bin Type Code", '<>%1', '');
+        if bin.FindSet(false, false) then begin
+            repeat
+
+                BinContent.Reset();
+                BinContent.SetRange("Bin Code", Bin.Code);
+                if BinContent.FindSet(true, false) then begin
+                    repeat
+                        BinContent."Bin Type Code" := bin."Bin Type Code";
+                        BinContent."Bin Ranking" := Bin."Bin Ranking";
+                        BinContent.Modify();
+                    until BinContent.Next = 0;
+                end;
+            until bin.Next = 0;
+        end;
     end;
 
 }

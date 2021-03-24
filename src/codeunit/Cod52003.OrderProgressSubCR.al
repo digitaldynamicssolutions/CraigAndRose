@@ -140,7 +140,7 @@ codeunit 52003 "Order Progress Sub. CR"
             OrderProgressEntry.SetRange(Status, OrderProgressEntry.Status::Picked);
             if OrderProgressEntry.IsEmpty then begin
                 if SalesHeader.get(SalesHeader."Document Type"::Order, Rec."Source No.") then begin
-                    InsertOrderProgress(RegWhseActivityHdr."Whse. Activity No.", SalesHeader."No.", ProgressStatus::Picked, SalesHeader."Location Code", SalesHeader."External Document No.", '');
+                    InsertOrderProgress(RegWhseActivityHdr."Whse. Activity No.", SalesHeader."No.", ProgressStatus::Picked, SalesHeader."Location Code", SalesHeader."External Document No.", rec."Assigned HH User CHHWTMN");
                 end;
             end;
         end;

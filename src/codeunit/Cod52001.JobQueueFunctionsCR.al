@@ -237,18 +237,19 @@ codeunit 52001 "Job Queue Functions CR"
                 SalesHeader.SetRange(Status, SalesHeader.Status::Released);
                 SalesHeader.SetRange("Location Code", Location.Code);
                 SalesHeader.SetRange("Shipping Advice", SalesHeader."Shipping Advice"::Complete);
+                SalesHeader.SetRange("Progress Status CR", SalesHeader."Progress Status CR"::Released);
                 if SalesHeader.FindSet(false, false) then begin
                     repeat
                         SalesLine.reset;
                         salesline.SetRange("Document Type", SalesHeader."Document Type");
                         SalesLine.SetRange("Document No.", SalesHeader."No.");
                         SalesLine.SetRange(Type, SalesLine.Type::Item);
-                        if SalesLine.FindSet(false, false) then begin
+                        if SalesLine.FindSet(true, false) then begin
                             repeat
                                 if item.Get(SalesLine."No.") then begin
                                     if item.type = item.type::Inventory then begin
                                         AvailQty := SalesFunctionsCR.CalcAvailInv(SalesLine."No.", SalesLine."Location Code", SalesLine."Outstanding Quantity");
-                                        AvailQty := AvailQty + SalesLine."Outstanding Quantity"; //V1.0.0.11 -+
+                                        AvailQty := AvailQty + SalesLine."Outstanding Quantity"; //V1.0.0.12 -+
                                         if SalesLine."Outstanding Quantity" > AvailQty then begin
                                             SalesLine.validate("Warehouse Stock Issue", true);
                                         end else begin
@@ -295,8 +296,6 @@ codeunit 52001 "Job Queue Functions CR"
                         end else begin
                             SalesHeader.CalcFields("Progress Status CR");
                             if SalesHeader."Progress Status CR" <> SalesHeader."Progress Status CR"::"Stock Issue" then begin
-                                SalesHeader."Progress Status CR" := SalesHeader."Progress Status CR"::"Stock Issue";
-                                SalesHeader.Modify(false);
                                 OrderProgress.InsertOrderProgress(SalesHeader."No.", SalesHeader."No.", ProgressStatus::"Stock Issue", SalesHeader."Location Code", SalesHeader."External Document No.", '');
                             end
                         end;
