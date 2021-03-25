@@ -3,6 +3,19 @@
 /// </summary>
 pageextension 52004 "PostedSalesInvoicePageCR" extends "Posted Sales Invoice"
 {
+
+    layout
+    {
+        addafter("Your Reference")
+        {
+            field("Order Date"; Rec."Order Date")
+            {
+                ApplicationArea = All;
+                StyleExpr = 'Strong';
+            }
+        }
+    }
+
     actions
     {
         addafter("&Navigate")
