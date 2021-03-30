@@ -26,6 +26,10 @@ codeunit 52001 "Job Queue Functions CR"
         if rec."Parameter String" = 'PROCESSWHSEORDERS' then begin
             CreateSOWhseDocuments();
         end;
+
+        if rec."Parameter String" = 'ADJUSTCOSTANDPOST' then begin
+            AdjustItemsPostToGL();
+        end;
     end;
 
     local procedure SendOTMOrders()
@@ -303,5 +307,21 @@ codeunit 52001 "Job Queue Functions CR"
                 end;
             until Location.Next = 0;
         end;
+    end;
+
+    local procedure AdjustItemsPostToGL()
+    var
+        AdjustCostReport: Report "Adjust Cost - Item Entries";
+        PostCostToGL: Report "Post Inventory Cost to G/L";
+        SalesEventSubCR: Codeunit SalesEventSubCR;
+    begin
+        AdjustCostReport.UseRequestPage(false);
+        AdjustCostReport.InitializeRequest('', '');
+        AdjustCostReport.SetPostToGL(true);
+        AdjustCostReport.RunModal();
+
+        PostCostToGL.InitializeRequest(1, '', true);
+        PostCostToGL.UseRequestPage(false);
+        PostCostToGL.RunModal();
     end;
 }
