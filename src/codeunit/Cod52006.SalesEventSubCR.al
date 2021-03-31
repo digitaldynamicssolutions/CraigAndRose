@@ -7,13 +7,14 @@ codeunit 52006 "SalesEventSubCR"
 
     local procedure UpdatePostingDate(var SalesHeader: Record "Sales Header")
     begin
-        SalesHeader."Posting Date" := WorkDate();
+        SalesHeader.validate("Posting Date", WorkDate);
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", 'OnBeforePostedWhseShptHeaderInsert', '', true, true)]
     local procedure UpWhsePostingDate(WarehouseShipmentHeader: Record "Warehouse Shipment Header")
     begin
-        WarehouseShipmentHeader."Posting Date" := WorkDate();
+        WarehouseShipmentHeader.Validate("Posting Date", WorkDate);
+        WarehouseShipmentHeader.Validate("Shipment Date", WorkDate);
     end;
 
 }
