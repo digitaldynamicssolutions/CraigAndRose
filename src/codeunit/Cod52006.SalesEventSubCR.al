@@ -10,11 +10,19 @@ codeunit 52006 "SalesEventSubCR"
         SalesHeader.validate("Posting Date", WorkDate);
     end;
 
-    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", 'OnBeforePostedWhseShptHeaderInsert', '', true, true)]
-    local procedure UpWhsePostingDate(WarehouseShipmentHeader: Record "Warehouse Shipment Header")
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", 'OnBeforeCheckWhseShptLines', '', true, true)]
+    local procedure UpWhsePostingDate(var WarehouseShipmentLine: Record "Warehouse Shipment Line")
+    var
+        WarehouseShipmentHeader: Record "Warehouse Shipment Header";
     begin
-        WarehouseShipmentHeader.Validate("Posting Date", WorkDate);
-        WarehouseShipmentHeader.Validate("Shipment Date", WorkDate);
+        if WarehouseShipmentHeader.Get(WarehouseShipmentLine."No.") then begin
+            if WarehouseShipmentHeader."Posting Date" <> WorkDate then begin
+                WarehouseShipmentHeader.Validate("Posting Date", WorkDate);
+                WarehouseShipmentHeader."Shipment Date" := WorkDate;
+                WarehouseShipmentHeader.Modify(true);
+            end;
+            WarehouseShipmentLine.Validate("Shipment Date", WorkDate);
+        end;
     end;
 
 }
