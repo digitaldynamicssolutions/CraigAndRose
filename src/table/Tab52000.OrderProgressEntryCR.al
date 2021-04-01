@@ -64,6 +64,10 @@ table 52000 "Order Progress Entry CR"
         {
             Clustered = true;
         }
+        key(OrderNo; "Original Order No.")
+        {
+            
+        }
     }
 
 }

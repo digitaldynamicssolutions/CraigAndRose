@@ -24,5 +24,4 @@ codeunit 52006 "SalesEventSubCR"
             WarehouseShipmentLine.Validate("Shipment Date", WorkDate);
         end;
     end;
-
 }

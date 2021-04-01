@@ -10,6 +10,8 @@ page 52000 "Order Progress Status List CR"
     SourceTable = "Order Progress Entry CR";
     UsageCategory = History;
     Editable = false;
+    SourceTableView = SORTING("Entry No.")
+                      ORDER(Descending);
 
     layout
     {

@@ -14,13 +14,5 @@ pageextension 52007 SalesListCR extends "Sales List"
                 StyleExpr = 'Strong';
             }
         }
-        addafter("Progress Status CR")
-        {
-            field("Progress Status DateTime CR"; rec."Progress Status DateTime CR")
-            {
-                ApplicationArea = All;
-                StyleExpr = 'Strong';
-            }
-        }
     }
 }
