@@ -47,6 +47,13 @@ tableextension 52007 "SalesShipmentHeaderCR" extends "Sales Shipment Header"
             Caption = 'CS To Cancel';
             DataClassification = ToBeClassified;
             Enabled = false;
+        }      
+        field(52007; "Cancellation Reason CR"; Code[20])
+        {
+            Caption = 'Cancellation Reason';
+            DataClassification = ToBeClassified;
+            TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
+            Editable = false;
         }
     }
 }

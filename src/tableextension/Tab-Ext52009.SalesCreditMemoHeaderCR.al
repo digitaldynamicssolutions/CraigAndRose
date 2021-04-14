@@ -49,5 +49,12 @@ tableextension 52009 "SalesCreditMemoHeaderCR" extends "Sales Cr.Memo Header"
             DataClassification = ToBeClassified;
             Enabled = false;
         }
+                field(52007; "Cancellation Reason CR"; Code[20])
+        {
+            Caption = 'Cancellation Reason';
+            DataClassification = ToBeClassified;
+            TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
+            Editable = false;
+        }
     }
 }

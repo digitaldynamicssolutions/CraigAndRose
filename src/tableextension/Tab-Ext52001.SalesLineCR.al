@@ -19,5 +19,23 @@ tableextension 52001 "SalesLineCR" extends "Sales Line"
             DataClassification = ToBeClassified;
             Editable = false;
         }
+
+        field(52002; "Cancellation Reason CR"; Code[20])
+        {
+            Caption = 'Cancellation Reason';
+            DataClassification = ToBeClassified;
+            TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
+
+            trigger OnValidate()
+            var
+                FieldLookup: Record "Field Lookup CR";
+            begin
+                if FieldLookup.Get('CANCELSALES', "Cancellation Reason CR") then begin
+                    if FieldLookup."Sales Refund Confirmation" then begin
+                        Message('Ensure any refund on this order has been completed');
+                    end;
+                end;
+            end;
+        }
     }
 }

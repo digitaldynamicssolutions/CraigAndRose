@@ -3,6 +3,8 @@
 /// </summary>
 pageextension 52011 SalesLineSubFormCR extends "Sales Order Subform"
 {
+
+
     layout
     {
         modify("No.")
@@ -18,6 +20,32 @@ pageextension 52011 SalesLineSubFormCR extends "Sales Order Subform"
                 ApplicationArea = All;
             }
         }
+        addafter("Warehouse Stock Issue")
+        {
+            field("Cancellation Reason CR"; rec."Cancellation Reason CR")
+            {
+                Caption = 'Cancellation Reason';
+                ApplicationArea = All;
+            }
+        }
+    }
+
+    actions
+    {
+        addafter(SelectMultiItems)
+        {
+            action("Delete Cancelled Line")
+            {
+                Image = DeleteRow;
+                ApplicationArea = All;
+
+                trigger OnAction()
+                begin
+                    FromCancelButton := true;
+                    SalesFunctionsCR.CancelSalesOrderLine(Rec."Document No.");
+                end;
+            }
+        }
     }
 
     trigger OnAfterGetRecord()
@@ -29,6 +57,15 @@ pageextension 52011 SalesLineSubFormCR extends "Sales Order Subform"
         end;
     end;
 
+    trigger OnDeleteRecord(): Boolean
+    begin
+        if not FromCancelButton then
+            Error('You must use the cancel line functionality.');
+    end;
+
     var
         LineStyleExprText: Text[20];
+        FromCancelButton: Boolean;
+        SalesFunctionsCR: Codeunit "Sales Functions CR";
+
 }

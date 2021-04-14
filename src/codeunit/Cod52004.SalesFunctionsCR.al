@@ -11,7 +11,6 @@ codeunit 52004 "Sales Functions CR"
     /// <param name="pRequired">Decimal.</param>
     /// <returns>Return value of type Decimal.</returns>
     procedure CalcAvailInv(var pItemCode: Code[20]; pLocationCode: Code[10]; pRequired: Decimal): Decimal
-    /// <param name="pRequired">Decimal.</param>
     var
         AvailQty: Decimal;
         TransferInboundQty: Decimal;
@@ -51,5 +50,32 @@ codeunit 52004 "Sales Functions CR"
             exit(AvailQty);
 
         end;
+    end;
+
+    /// <summary>
+    /// CancelSalesOrderLine.
+    /// </summary>
+    /// <param name="pDocNo">VAR Code[20].</param>
+    procedure CancelSalesOrderLine(var pDocNo: Code[20])
+    var
+        ArchiveManagement: Codeunit ArchiveManagement;
+        SalesLine: Record "Sales Line";
+        SalesHeader: Record "Sales Header";
+        LineCount: Integer;
+    begin
+        SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
+        SalesLine.SetRange("Document No.", pDocNo);
+        SalesLine.SetFilter("Cancellation Reason CR", '<>%1', '');
+        if SalesLine.FindFirst() then begin
+            LineCount := SalesLine.Count;
+            if confirm('Are you sure you want to delete %1 lines?', true, LineCount) then begin
+                if SalesHeader.get(SalesLine."Document Type", SalesLine."Document No.") then begin
+                    ArchiveManagement.StoreSalesDocument(SalesHeader,false);
+                end;
+                SalesLine.DeleteAll(true);
+            end;
+
+        end;
+
     end;
 }

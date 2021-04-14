@@ -3,6 +3,7 @@
 /// </summary>
 pageextension 52003 SalesOrderPageCR extends "Sales Order"
 {
+
     layout
     {
         addafter(Status)
@@ -37,6 +38,17 @@ pageextension 52003 SalesOrderPageCR extends "Sales Order"
                 trigger OnValidate()
                 begin
                     CurrPage.Update();
+                end;
+            }
+
+            field("Cancellation Reason CR"; rec."Cancellation Reason CR")
+            {
+                Caption = 'Cancellation Reason';
+                ApplicationArea = All;
+
+                trigger OnValidate()
+                begin
+                    CurrPage.SalesLines.Page.Update();
                 end;
             }
         }
@@ -133,5 +145,4 @@ pageextension 52003 SalesOrderPageCR extends "Sales Order"
 
         }
     }
-
 }

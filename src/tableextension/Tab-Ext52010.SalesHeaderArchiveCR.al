@@ -18,7 +18,7 @@ tableextension 52010 "SalesHeaderArchiveCR" extends "Sales Header Archive"
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        
+
         field(52002; "Progress Status CR"; enum "Order Progress CR")
         {
             Caption = 'Progress Status';
@@ -48,6 +48,13 @@ tableextension 52010 "SalesHeaderArchiveCR" extends "Sales Header Archive"
             Caption = 'CS To Cancel';
             DataClassification = ToBeClassified;
             Enabled = false;
+        }
+        field(52007; "Cancellation Reason CR"; Code[20])
+        {
+            Caption = 'Cancellation Reason';
+            DataClassification = ToBeClassified;
+            TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
+            Editable = false;
         }
     }
 }

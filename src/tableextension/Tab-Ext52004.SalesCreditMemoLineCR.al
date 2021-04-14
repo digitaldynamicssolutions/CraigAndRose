@@ -18,5 +18,13 @@ tableextension 52004 "SalesCreditMemoLineCR" extends "Sales Cr.Memo Line"
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        
+        field(52002; "Cancellation Reason CR"; Code[20])
+        {
+            Caption = 'Cancellation Reason';
+            DataClassification = ToBeClassified;
+            TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
+            Editable = false;
+        }
     }
 }
