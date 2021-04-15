@@ -16,6 +16,25 @@ codeunit 52002 "Data Functions CR"
             UpdateBinContent();
         end;
 
+        if Rec."Parameter String" = 'CANCELREASON' then begin
+            ClearCancel();
+        end;
+
+    end;
+
+    local procedure ClearCancel()
+    var
+        salesheader: Record "Sales Header";
+        salesline: Record "Sales Line";
+    begin
+        salesheader.SetFilter("Cancellation Reason CR", '<>%1', '');
+        if salesheader.FindFirst() then begin
+            salesheader.ModifyAll("Cancellation Reason CR", '', false);
+        end;
+        salesline.SetFilter("Cancellation Reason CR", '<>%1', '');
+        if salesline.FindFirst() then begin
+            salesline.ModifyAll("Cancellation Reason CR", '', false);
+        end;
     end;
 
     local procedure PickClearDown()

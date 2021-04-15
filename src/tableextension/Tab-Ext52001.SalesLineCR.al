@@ -29,10 +29,15 @@ tableextension 52001 "SalesLineCR" extends "Sales Line"
             trigger OnValidate()
             var
                 FieldLookup: Record "Field Lookup CR";
+                SalesLine: Record "Sales Line";
             begin
                 if FieldLookup.Get('CANCELSALES', "Cancellation Reason CR") then begin
                     if FieldLookup."Sales Refund Confirmation" then begin
-                        Message('Ensure any refund on this order has been completed');
+                        SalesLine.SetRange("Document Type", "Document Type");
+                        SalesLine.SetRange("Document No.", "Document No.");
+                        SalesLine.SetFilter("Cancellation Reason CR", '<>%1', '');
+                        if SalesLine.Count = 0 then
+                          Message('Ensure any refund on this order has been completed');
                     end;
                 end;
             end;

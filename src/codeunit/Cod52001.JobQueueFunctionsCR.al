@@ -236,7 +236,7 @@ codeunit 52001 "Job Queue Functions CR"
         Location.SetRange("Auto. Create Shipment & Pick", true);
         if Location.FindSet(false, false) then begin
             repeat
-                //SalesHeader.SetCurrentKey()
+                SalesHeader.SetCurrentKey("Document Date");
                 SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
                 SalesHeader.SetRange(Status, SalesHeader.Status::Released);
                 SalesHeader.SetRange("Location Code", Location.Code);
