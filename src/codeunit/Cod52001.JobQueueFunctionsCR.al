@@ -224,6 +224,7 @@ codeunit 52001 "Job Queue Functions CR"
         WarehouseShipmentLine: Record "Warehouse Shipment Line";
         WarehouseShipmentHeader: Record "Warehouse Shipment Header";
         WarehouseActivityLine: Record "Warehouse Activity Line";
+        WarehouseActivityHeader: Record "Warehouse Activity Header";
         SalesFunctionsCR: Codeunit "Sales Functions CR";
         GetSourceDocOutbound: Codeunit "Get Source Doc. Outbound";
         ReleaseWarehouseDoc: Codeunit "Whse.-Shipment Release";
@@ -297,6 +298,18 @@ codeunit 52001 "Job Queue Functions CR"
                                     end;
                                 end;
                             end;
+
+                            //Update Pick
+                            WarehouseActivityLine.Reset();
+                            WarehouseActivityLine.SETRANGE("Source Document", WarehouseActivityLine."Source Document"::"Sales Order");
+                            WarehouseActivityLine.SETRANGE("Source No.", SalesHeader."No.");
+                            if WarehouseActivityLine.FindFirst then begin
+                                if WarehouseActivityHeader.Get(WarehouseActivityLine."Activity Type", WarehouseActivityLine."No.") then begin
+                                    WarehouseActivityHeader.Validate("Sorting Method", WarehouseActivityHeader."Sorting Method"::Item);
+                                    WarehouseActivityHeader.Modify(true);
+                                end;
+                            end;
+                            
                         end else begin
                             SalesHeader.CalcFields("Progress Status CR");
                             if SalesHeader."Progress Status CR" <> SalesHeader."Progress Status CR"::"Stock Issue" then begin

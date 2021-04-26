@@ -11,5 +11,10 @@ tableextension 52000 "ItemTableCR" extends Item
             TableRelation = Location;
             DataClassification = ToBeClassified;
         }
+        field(52001; "Production Order Multiple CR"; Integer)
+        {
+            Caption = 'Production Order Multiple';
+            DataClassification = ToBeClassified;
+        }
     }
 }
