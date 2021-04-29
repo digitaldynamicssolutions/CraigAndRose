@@ -13,5 +13,11 @@ tableextension 52012 "Production Order CR" extends "Production Order"
             FieldClass = FlowField;
             CalcFormula = sum("Prod. Order Line"."Finished Quantity" where("Prod. Order No." = field("No.")));
         }
+
+        field(52001; "Auto-Generated CR"; Boolean)
+        {
+            Caption = 'Auto-Generated';
+            DataClassification = ToBeClassified;
+        }
     }
 }

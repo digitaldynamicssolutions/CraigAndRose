@@ -64,7 +64,7 @@ codeunit 52008 "Production - Job Queue Func."
                                     ProdQty := (item."Qty. on Sales Order" - OnStockQty);
 
                                 RelProdOrder.Validate(Quantity, ProdQty);
-                                RelProdOrder.validate("Assigned User ID", AssUserID);
+                                RelProdOrder."Auto-Generated CR" := true;
                                 RelProdOrder.Insert(true);
 
                                 //Get Assigned User
@@ -100,7 +100,7 @@ codeunit 52008 "Production - Job Queue Func."
         AutoRefreshProdOrders: Report RefreshProdOrderSchedCR;
     begin
         ProductionOrder.SetRange("Creation Date", TODAY);
-        ProductionOrder.SetFilter("Assigned User ID", '<>%1', '');
+        ProductionOrder.SetRange("Auto-Generated CR", true);
         if ProductionOrder.FindSet() then begin
             repeat
                 Clear(AutoRefreshProdOrders);
