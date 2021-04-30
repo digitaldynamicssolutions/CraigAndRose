@@ -111,6 +111,7 @@ report 52002 "RefreshProdOrderSchedCR"
 
             trigger OnPreDataItem()
             begin
+                SetRange("No.", ProductionOrderFilter); //CR-+
                 Window.Open(
                   Text000 +
                   Text001 +
@@ -119,7 +120,7 @@ report 52002 "RefreshProdOrderSchedCR"
         }
     }
 
-    
+
     labels
     {
     }
@@ -147,7 +148,9 @@ report 52002 "RefreshProdOrderSchedCR"
         CreateInbRqst: Boolean;
         Text005: Label 'One or more of the lines on this %1 require special warehouse handling. The %2 for these lines has been set to blank.';
         DeletePickedLinesQst: Label 'Components for production order %1 have already been picked. Do you want to continue?', Comment = 'Production order no.: Components for production order 101001 have already been picked. Do you want to continue?';
-
+        //CR -
+        ProductionOrderFilter: Code[20];
+    //CR +
     local procedure CheckReservationExist()
     var
         ProdOrderLine2: Record "Prod. Order Line";
@@ -196,16 +199,16 @@ report 52002 "RefreshProdOrderSchedCR"
     var
         ReservEntry: Record "Reservation Entry";
     begin
-        
-            ReservEntry.SetSourceFilter(SourceType, Status.AsInteger(), ProdOrderNo, LineNo, true);
-            ReservEntry.SetSourceFilter('', ProdOrderLineNo);
-            ReservEntry.SetRange("Reservation Status", "Reservation Status"::Reservation);
-            if ReservEntry.FindFirst then begin
-                ReservEntry.Get(ReservEntry."Entry No.", not ReservEntry.Positive);
-                exit(
-                  not ((ReservEntry."Source Type" = SourceType2) and
-                       (ReservEntry."Source ID" = ProdOrderNo) and (ReservEntry."Source Subtype" = Status.AsInteger())));
-            end;
+
+        ReservEntry.SetSourceFilter(SourceType, Status.AsInteger(), ProdOrderNo, LineNo, true);
+        ReservEntry.SetSourceFilter('', ProdOrderLineNo);
+        ReservEntry.SetRange("Reservation Status", "Reservation Status"::Reservation);
+        if ReservEntry.FindFirst then begin
+            ReservEntry.Get(ReservEntry."Entry No.", not ReservEntry.Positive);
+            exit(
+              not ((ReservEntry."Source Type" = SourceType2) and
+                   (ReservEntry."Source ID" = ProdOrderNo) and (ReservEntry."Source Subtype" = Status.AsInteger())));
+        end;
 
         exit(false);
     end;
@@ -219,10 +222,10 @@ report 52002 "RefreshProdOrderSchedCR"
         if IsHandled then
             exit;
 
-            if RoutingNo <> ProductionOrder."Routing No." then begin
-                ProductionOrder."Routing No." := RoutingNo;
-                ProductionOrder.Modify;
-            end;
+        if RoutingNo <> ProductionOrder."Routing No." then begin
+            ProductionOrder."Routing No." := RoutingNo;
+            ProductionOrder.Modify;
+        end;
     end;
 
     local procedure CheckProductionBOMStatus(ProdBOMNo: Code[20]; ProdBOMVersionNo: Code[20])
@@ -274,6 +277,12 @@ report 52002 "RefreshProdOrderSchedCR"
         CalcRoutings := CalcRoutings2;
         CalcComponents := CalcComponents2;
         CreateInbRqst := CreateInbRqst2;
+    end;
+
+    //CR -+
+    procedure SetProdOrder(var pProdOrderNo: Code[20])
+    begin
+        ProductionOrderFilter := pProdOrderNo;
     end;
 
     local procedure IsComponentPicked(ProdOrder: Record "Production Order"): Boolean

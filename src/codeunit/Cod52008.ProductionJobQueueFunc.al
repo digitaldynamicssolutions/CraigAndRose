@@ -4,11 +4,15 @@ codeunit 52008 "Production - Job Queue Func."
 
     trigger OnRun()
     begin
-        //DelPro();
+
         if Rec."Parameter String" = 'CREATEPRODORDER' then begin
             CreateProductionOrders();
-            RefreshProdOrders();
         end;
+
+        if Rec."Parameter String" = 'DELETEPRODTODAY' then begin
+            DeleteProdOrders();
+        end;
+
     end;
 
     local procedure CreateProductionOrders()
@@ -20,16 +24,21 @@ codeunit 52008 "Production - Job Queue Func."
         OpenRelProdOrder: Record "Production Order";
         WarehouseEmployee: Record "Warehouse Employee";
         ManufacturingSetup: Record "Manufacturing Setup";
+        Routing: Record "Routing Header";
+        ProdOrdersToRefreshTemp: Record "Item Translation" temporary;
+        RefreshProductionOrder: Record "Production Order";
+        AutoRefreshProdOrdersRep: Report RefreshProdOrderSchedCR;
         NoSeriesMgt: Codeunit NoSeriesManagement;
         AutoRefreshProductionOrders: report RefreshProdOrderSchedCR;
         OnStockQty: Decimal;
         ProdQty: Decimal;
         AssUserID: Code[50];
         AssUserIDProdCount: Integer;
-
+        NewOrdersCreated: Boolean;
     begin
         ManufacturingSetup.get;
         CompanyInfo.get;
+        NewOrdersCreated := false;
         SalesLine.SetRange("Document Type", SalesLine."Document Type"::Order);
         SalesLine.SetRange(Type, SalesLine.type::Item);
         SalesLine.SetRange("Warehouse Stock Issue", true);
@@ -47,12 +56,13 @@ codeunit 52008 "Production - Job Queue Func."
                         OnStockQty := item.Inventory + item."Qty. on Prod. Order";
                         if item."Qty. on Sales Order" > OnStockQty then begin
                             //Create Production Order
-
                             OpenRelProdOrder.SetRange(Status, OpenRelProdOrder.Status::Released);
                             OpenRelProdOrder.SetRange("Source No.", item."No.");
                             OpenRelProdOrder.SetRange("Creation Date", Today);
+                            OpenRelProdOrder.SetRange("Auto-Generated CR", true);
+                            OpenRelProdOrder.SetRange("Location Code", CompanyInfo."Location Code");
                             if OpenRelProdOrder.IsEmpty then begin
-
+                                NewOrdersCreated := true;
                                 RelProdOrder.InitRecord();
                                 RelProdOrder.Validate(Status, RelProdOrder.Status::Released);
                                 RelProdOrder.Validate("No.", NoSeriesMgt.GetNextNo(ManufacturingSetup."Released Order Nos.", Today, true));
@@ -65,6 +75,10 @@ codeunit 52008 "Production - Job Queue Func."
 
                                 RelProdOrder.Validate(Quantity, ProdQty);
                                 RelProdOrder."Auto-Generated CR" := true;
+                                if Routing.get(item."Routing No.") then begin
+                                    RelProdOrder.Validate("Location Code", Routing."Location Code CR");
+                                end else
+                                    RelProdOrder.Validate("Location Code", CompanyInfo."Location Code");
                                 RelProdOrder.Insert(true);
 
                                 //Get Assigned User
@@ -86,39 +100,41 @@ codeunit 52008 "Production - Job Queue Func."
 
                                 RelProdOrder.validate("Assigned User ID", AssUserID);
                                 RelProdOrder.Modify(true);
+
+                                ProdOrdersToRefreshTemp.Init();
+                                ProdOrdersToRefreshTemp."Item No." := RelProdOrder."No.";
+                                ProdOrdersToRefreshTemp."Language Code" := 'ENG';
+                                ProdOrdersToRefreshTemp.insert;
                             end;
                         end;
                     end;
                 end
             until SalesLine.next = 0;
         end;
-    end;
 
-    local procedure RefreshProdOrders()
-    var
-        ProductionOrder: Record "Production Order";
-        AutoRefreshProdOrders: Report RefreshProdOrderSchedCR;
-    begin
-        ProductionOrder.SetRange("Creation Date", TODAY);
-        ProductionOrder.SetRange("Auto-Generated CR", true);
-        if ProductionOrder.FindSet() then begin
-            repeat
-                Clear(AutoRefreshProdOrders);
-                AutoRefreshProdOrders.InitializeRequest(1, true, true, true, false);
-                AutoRefreshProdOrders.UseRequestPage(false);
-                AutoRefreshProdOrders.SetTableView(ProductionOrder);
-                AutoRefreshProdOrders.runmodal;
-            until ProductionOrder.next = 0;
+        if NewOrdersCreated then begin
+            if ProdOrdersToRefreshTemp.FindSet(false, false) then begin
+                repeat
+                    if RefreshProductionOrder.GET(RefreshProductionOrder.Status::Released, ProdOrdersToRefreshTemp."Item No.") then begin
+                        Clear(AutoRefreshProdOrdersRep);
+                        AutoRefreshProdOrdersRep.InitializeRequest(1, true, true, true, false);
+                        AutoRefreshProdOrdersRep.UseRequestPage(false);
+                        AutoRefreshProdOrdersRep.SetProdOrder(RefreshProductionOrder."No.");
+                        AutoRefreshProdOrdersRep.runmodal;
+                    end;
+                until ProdOrdersToRefreshTemp.next = 0;
+            end;
         end;
     end;
 
-
-    local procedure DelPro()
+    local procedure DeleteProdOrders()
     var
-        Prod: Record "Production Order";
+        ProductionOrder: Record "Production Order";
+        MyDate: date;
     begin
-        Prod.Setfilter("Creation Date", '230421D');
-        if Prod.FindFirst() then
-            prod.DeleteAll(true);
+        ProductionOrder.Setrange("Creation Date", TODAY);
+        ProductionOrder.SetRange("Auto-Generated CR", true);
+        if ProductionOrder.FindFirst() then
+            ProductionOrder.DeleteAll(true);
     end;
 }
