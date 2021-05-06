@@ -2,7 +2,7 @@
   "id": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
   "name": "Internal C&R Customisation",
   "publisher": "DDS",
-  "version": "1.0.0.26",
+  "version": "1.0.0.27",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -14,7 +14,12 @@
     "id": "b9207dc8-e910-4c0d-85fc-7b7ec3e03112",
     "name": "Clever Handheld for Warehousing",
     "publisher": "Clever Dynamics",
-    "version": "7.3.6.8576"}
+    "version": "7.3.6.8576"},
+    {
+      "id": "b5b268af-72c7-48c0-bad4-cbb0623c2a9b",
+      "name": "Craig & Rose Customisation",
+      "publisher": "QuantiQ",
+      "version": "1.0.0.28"}
   ],
   "screenshots": [],
   "platform": "17.0.20458.20517",

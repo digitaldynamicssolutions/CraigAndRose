@@ -12,7 +12,7 @@ tableextension 52016 "WarehouseEmployeeCR" extends "Warehouse Employee"
         {
             Caption = 'Assigned Production Orders';
             FieldClass = Flowfield;
-            CalcFormula = count("Production Order" where("Assigned User ID" = field("User ID"), "Location Code" = field("Location Code")));
+            CalcFormula = count("Production Order" where("Assigned User ID" = field("User ID"), "Location Code" = field("Location Code"), Status = const(Released)));
             Editable = false;
         }
     }

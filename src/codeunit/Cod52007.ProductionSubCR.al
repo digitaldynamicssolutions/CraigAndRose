@@ -16,7 +16,7 @@ codeunit 52007 "ProductionSubCR"
             if ProductionOrder."Location Code" = '' then begin
                 ProductionOrder.validate("Location Code", Routing."Location Code CR");
                 ProductionOrder.Modify();
-            
+
                 ProdOrderLine.setrange("Prod. Order No.", ProductionOrder."No.");
                 //ProdOrderLine.SetRange("Routing No.", ProductionOrder."Routing No.");
                 ProdOrderLine.SetFilter("Location Code", '');
@@ -27,6 +27,21 @@ codeunit 52007 "ProductionSubCR"
                     until ProdOrderLine.Next = 0;
                 end;
             end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Prod. Order Status Management", 'OnBeforeCheckBeforeFinishProdOrder', '', true, true)]
+
+    /// <summary>
+    /// HasFinishedQty.
+    /// </summary>
+    /// <param name="ProductionOrder">VAR Record "Production Order".</param>
+    procedure HasFinishedQty(var ProductionOrder: Record "Production Order")
+    begin
+        if ProductionOrder.Status = ProductionOrder.Status::Released then begin
+            ProductionOrder.CalcFields("Total Finished Quantity CR");
+            if ProductionOrder."Total Finished Quantity CR" = 0 then
+                error('You are unable to finish a production order with zero finished quantity.')
         end;
     end;
 }

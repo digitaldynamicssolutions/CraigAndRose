@@ -378,6 +378,7 @@ report 52003 "SalesShipmentCR"
             column(ExternalDocumentNo_Lbl; FieldCaption("External Document No."))
             {
             }
+
             dataitem(Line; "Sales Shipment Line")
             {
                 DataItemLink = "Document No." = FIELD("No.");
@@ -449,6 +450,9 @@ report 52003 "SalesShipmentCR"
                 column(Qty_Lbl; QtyLbl)
                 {
                 }
+                column(ConsumerUOM; ConsumerUOMCode)
+                {
+                }
                 dataitem(AssemblyLine; "Posted Assembly Line")
                 {
                     DataItemTableView = SORTING("Document No.", "Line No.");
@@ -495,8 +499,11 @@ report 52003 "SalesShipmentCR"
 
                     if type = type::Item then begin
                         if item.Get("No.") then begin
+                            ConsumerUOMCode := '';
                             if item.Type <> Item.type::Inventory then
-                                CurrReport.skip;
+                                CurrReport.skip
+                            else
+                                ConsumerUOMCode := item."Consumer Unit of Measure";
                         end
                     end;
 
@@ -806,6 +813,7 @@ report 52003 "SalesShipmentCR"
     end;
 
     var
+        ConsumerUOMCode: code[20];
         GLSetup: Record "General Ledger Setup";
         ShipmentMethod: Record "Shipment Method";
         SalespersonPurchaser: Record "Salesperson/Purchaser";

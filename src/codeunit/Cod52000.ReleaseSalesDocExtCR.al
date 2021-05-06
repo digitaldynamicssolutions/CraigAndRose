@@ -84,4 +84,42 @@ codeunit 52000 ReleaseSalesDocExtCR
             end;
         end;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnBeforeReleaseSalesDoc', '', true, true)]
+    /// <summary>
+    /// SetGLServiceLines.
+    /// </summary>
+    /// <param name="SalesHeader">VAR Record "Sales Header".</param>
+    procedure SetGLServiceLines(var SalesHeader: Record "Sales Header")
+    var
+        SalesLine: Record "Sales Line";
+        Location: Record Location;
+        item: Record Item;
+    begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
+            if Location.get(SalesHeader."Location Code") then begin
+                if Location."Require Shipment" then begin
+                    SalesLine.SetRange("Document Type", SalesHeader."Document Type");
+                    SalesLine.SetRange("Document No.", SalesHeader."No.");
+                    if SalesLine.FindSet(true, false) then begin
+                        repeat
+                            if SalesLine.Type = SalesLine.Type::"G/L Account" then begin
+                                SalesLine.Validate("Qty. to Ship", SalesLine."Outstanding Quantity");
+                                SalesLine.modify(true);
+                            end else begin
+                                if SalesLine.Type = SalesLine.Type::Item then begin
+                                    if item.get(SalesLine."No.") then begin
+                                        if item.Type = item.type::Service then begin
+                                            SalesLine.Validate("Qty. to Ship", SalesLine."Outstanding Quantity");
+                                            SalesLine.modify(true);
+                                        end;
+                                    end;
+                                end;
+                            end;
+                        until SalesLine.next = 0;
+                    end
+                end;
+            end;
+        end;
+    end;
 }
