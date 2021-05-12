@@ -30,6 +30,10 @@ codeunit 52001 "Job Queue Functions CR"
         if rec."Parameter String" = 'ADJUSTCOSTANDPOST' then begin
             AdjustItemsPostToGL();
         end;
+
+        if rec."Parameter String" = 'CUSTRELEASEORDERS' then begin
+            ReleaseCustomerOrders();
+        end;
     end;
 
     local procedure SendOTMOrders()
@@ -43,8 +47,6 @@ codeunit 52001 "Job Queue Functions CR"
         OTMSalesReport: Report "OTM Sales Lines To Ship CR";
         OTMOutstream: Outstream;
         OTMInstream: InStream;
-
-
     begin
         SalesSetup.GET;
         SalesSetup.TestField("OTM Order E-mail Address");
@@ -309,7 +311,7 @@ codeunit 52001 "Job Queue Functions CR"
                                     WarehouseActivityHeader.Modify(true);
                                 end;
                             end;
-                            
+
                         end else begin
                             SalesHeader.CalcFields("Progress Status CR");
                             if SalesHeader."Progress Status CR" <> SalesHeader."Progress Status CR"::"Stock Issue" then begin
@@ -336,5 +338,47 @@ codeunit 52001 "Job Queue Functions CR"
         PostCostToGL.InitializeRequest(1, '', true);
         PostCostToGL.UseRequestPage(false);
         PostCostToGL.RunModal();
+    end;
+
+    local procedure ReleaseCustomerOrders()
+    //V1.0.0.5 02/03/21 -+
+    var
+        CompanyInfo: Record "Company Information";
+        Customer: Record Customer;
+        SalesHeader: Record "Sales Header";
+        SalesLine: Record "Sales Line";
+        Item: Record Item;
+        SalesSetup: Record "Sales & Receivables Setup";
+        ReleaseSalesDocument: Codeunit "Release Sales Document";
+        AutoRelease: Boolean;
+        ToDateTime: DateTime;
+
+    begin
+
+        SalesSetup.GET;
+        CompanyInfo.GET;
+        CompanyInfo.TestField("Location Code");
+
+        ToDateTime := CurrentDateTime - 3600000;
+        Customer.SetRange("Auto Release Sales Orders CR", true);
+        if Customer.FindSet(false, false) then begin
+            repeat
+                SalesHeader.Reset();
+                SalesHeader.SetRange("Document Type", SalesHeader."Document Type"::Order);
+                SalesHeader.SetRange("Location Code", CompanyInfo."Location Code");
+                SalesHeader.SetRange(Status, SalesHeader.Status::Open);
+                SalesHeader.SetRange("Sell-to Customer No.", Customer."No.");
+                SalesHeader.SetFilter(SystemCreatedAt, '..%1', ToDateTime);
+                SalesHeader.SetRange("CS To Cancel CR", false);
+                SalesHeader.SetRange("CS On Hold CR", false);
+                if SalesHeader.FindSet(true, false) then begin
+                    repeat
+                        if (SalesHeader."Ship-to Name" <> '') and (SalesHeader."Ship-to Address" <> '') and (SalesHeader."Ship-to Post Code" <> '') and (SalesHeader."Ship-to Country/Region Code" <> '') then begin
+                            ReleaseSalesDocument.Run(SalesHeader);
+                        end;
+                    until SalesHeader.Next = 0;
+                end;
+            until Customer.next = 0;
+        end;
     end;
 }

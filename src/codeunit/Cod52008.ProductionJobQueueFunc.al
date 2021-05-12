@@ -9,10 +9,6 @@ codeunit 52008 "Production - Job Queue Func."
             CreateProductionOrders();
         end;
 
-        if Rec."Parameter String" = 'DELETEPRODTODAY' then begin
-            DeleteProdOrders();
-        end;
-
     end;
 
     local procedure CreateProductionOrders()
@@ -127,14 +123,4 @@ codeunit 52008 "Production - Job Queue Func."
         end;
     end;
 
-    local procedure DeleteProdOrders()
-    var
-        ProductionOrder: Record "Production Order";
-        MyDate: date;
-    begin
-        ProductionOrder.Setrange("Creation Date", TODAY);
-        ProductionOrder.SetRange("Auto-Generated CR", true);
-        if ProductionOrder.FindFirst() then
-            ProductionOrder.DeleteAll(true);
-    end;
 }

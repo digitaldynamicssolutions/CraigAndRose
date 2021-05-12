@@ -20,6 +20,9 @@ codeunit 52002 "Data Functions CR"
             ClearCancel();
         end;
 
+        if Rec."Parameter String" = 'CUSTCLEANSE' then begin
+            CustomerCleanse();
+        end;
     end;
 
     local procedure ClearCancel()
@@ -100,4 +103,38 @@ codeunit 52002 "Data Functions CR"
         end;
     end;
 
+    local procedure CustomerCleanse()
+    var
+        Customer: Record Customer;
+        CustomerLedgerEntry: Record "Cust. Ledger Entry";
+        SalesHeader: Record "Sales Header";
+        DeleteCustomer: Boolean;
+        DelNo: Integer;
+    begin
+        customer.setrange("Customer Price Group", 'WEB01');
+        if Customer.FindSet() then begin
+            repeat
+                DeleteCustomer := true;
+                CustomerLedgerEntry.reset;
+                CustomerLedgerEntry.SetRange("Customer No.", Customer."No.");
+                if CustomerLedgerEntry.FindFirst() then begin
+                    DeleteCustomer := false;
+                end;
+
+                IF DeleteCustomer then begin
+                    SalesHeader.Reset;
+                    SalesHeader.SetRange("Sell-to Customer No.", Customer."No.");
+                    if SalesHeader.FindFirst() then begin
+                        DeleteCustomer := false;
+                    end;
+                end;
+
+                if DeleteCustomer then begin
+                    customer.Delete(true);
+                    DelNo += 1;
+                end;
+            until Customer.next = 0;
+        end;
+        message(format(DelNo));
+    end;
 }
