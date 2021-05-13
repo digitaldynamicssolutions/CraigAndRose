@@ -130,7 +130,7 @@ codeunit 52002 "Data Functions CR"
                 end;
 
                 if DeleteCustomer then begin
-                    customer.Delete(true);
+                    //customer.Delete(true);
                     DelNo += 1;
                 end;
             until Customer.next = 0;

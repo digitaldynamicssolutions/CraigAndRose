@@ -19,7 +19,14 @@
       "id": "b5b268af-72c7-48c0-bad4-cbb0623c2a9b",
       "name": "Craig & Rose Customisation",
       "publisher": "QuantiQ",
-      "version": "1.0.0.28"}
+      "version": "1.0.0.28"},
+      {
+        "id": "1e6af11a-9854-46d4-a4b2-3ae0cf4d7fad",
+        "name": "Clever Handheld Framework",
+        "publisher": "Clever Dynamics",
+        "version": "7.4.0.0"
+        }
+        
   ],
   "screenshots": [],
   "platform": "17.0.20458.20517",
