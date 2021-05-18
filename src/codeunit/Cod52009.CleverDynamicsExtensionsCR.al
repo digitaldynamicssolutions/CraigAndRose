@@ -1,4 +1,4 @@
-codeunit 52009 CleverDynamicsExtensionsCR
+codeunit 52009 "CleverDynamicsExtensionsCR"
 {
     var
         SessionMgt: Codeunit "Session Mgt. CHHFTMN";
@@ -26,6 +26,7 @@ codeunit 52009 CleverDynamicsExtensionsCR
         Evaluate(ActivityLineNo, SessionMgt.GetContent('ACTIVITYLINENO'));
         if WarehouseActivityLine.Get(WarehouseActivityLine."Activity Type"::Pick, ActivityNo, ActivityLineNo) then
             SessionMgt.SetTransResponseData('QTYOUTSTANDINGBASE', Format(WarehouseActivityLine."Qty. Outstanding (Base)"), true)
+        //SessionMgt.SetTransResponseData('QTYOUTSTANDINGBASE', '99', true)
         else
             SessionMgt.SetTransResponseData('QTYOUTSTANDINGBASE', '', true);
     end;

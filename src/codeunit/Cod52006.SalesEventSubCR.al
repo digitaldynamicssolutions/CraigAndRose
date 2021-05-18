@@ -8,6 +8,7 @@ codeunit 52006 "SalesEventSubCR"
     local procedure UpdatePostingDate(var SalesHeader: Record "Sales Header")
     begin
         SalesHeader.validate("Posting Date", WorkDate);
+        SalesHeader.Modify(true);
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment", 'OnBeforeCheckWhseShptLines', '', true, true)]

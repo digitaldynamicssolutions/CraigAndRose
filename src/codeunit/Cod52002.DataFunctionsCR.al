@@ -19,10 +19,6 @@ codeunit 52002 "Data Functions CR"
         if Rec."Parameter String" = 'CANCELREASON' then begin
             ClearCancel();
         end;
-
-        if Rec."Parameter String" = 'CUSTCLEANSE' then begin
-            CustomerCleanse();
-        end;
     end;
 
     local procedure ClearCancel()
@@ -130,11 +126,9 @@ codeunit 52002 "Data Functions CR"
                 end;
 
                 if DeleteCustomer then begin
-                    //customer.Delete(true);
-                    DelNo += 1;
+                    customer.Delete(true);
                 end;
             until Customer.next = 0;
         end;
-        message(format(DelNo));
     end;
 }
