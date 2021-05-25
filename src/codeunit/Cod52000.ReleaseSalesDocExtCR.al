@@ -122,4 +122,32 @@ codeunit 52000 ReleaseSalesDocExtCR
             end;
         end;
     end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Release Sales Document", 'OnBeforeReleaseSalesDoc', '', true, true)]
+    /// <summary>
+    /// SetGLServiceLines.
+    /// </summary>
+    /// <param name="SalesHeader">VAR Record "Sales Header".</param>
+    procedure UpdateDefaultShipping(var SalesHeader: Record "Sales Header")
+    var
+        SalesLine: Record "Sales Line";
+        Location: Record Location;
+        Customer: Record Customer;
+        ShipToAddress: Record "Ship-to Address";
+    begin
+        if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then begin
+            if SalesHeader."Ship-to Code" = '' then begin
+                if Location.get(SalesHeader."Location Code") then begin
+                    if Location."Require Shipment" then begin
+                        ShipToAddress.SetRange("Customer No.", SalesHeader."Sell-to Customer No.");
+                        ShipToAddress.SetRange("Default CR", true);
+                        IF ShipToAddress.FindFirst() then begin
+                            SalesHeader.validate("Ship-to Code", ShipToAddress.code);
+                            SalesHeader.Modify();
+                        end;
+                    end;
+                end;
+            end;
+        end;
+    end;
 }

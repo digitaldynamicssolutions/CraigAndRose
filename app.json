@@ -2,7 +2,7 @@
   "id": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
   "name": "Internal C&R Customisation",
   "publisher": "DDS",
-  "version": "1.0.0.32",
+  "version": "1.0.0.34",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -25,7 +25,13 @@
         "name": "Clever Handheld Framework",
         "publisher": "Clever Dynamics",
         "version": "7.4.0.0"
-        }
+        },
+        {
+          "id": "8cf5c5df-ec5f-4c60-a0d8-58eb2d376de6",
+          "name": "Clever Shipping Agent Integration",
+          "publisher": "Clever Dynamics",
+          "version": "2.4.0.12323"
+          }
         
   ],
   "screenshots": [],
