@@ -1,4 +1,4 @@
-pageextension 52014 "ShipToAddressCR" extends "Ship-to Address"
+pageextension 52030 "ShipToAddressCR" extends "Ship-to Address"
 {
     layout
     {

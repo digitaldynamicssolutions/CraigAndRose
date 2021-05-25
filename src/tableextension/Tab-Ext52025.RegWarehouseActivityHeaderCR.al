@@ -14,7 +14,7 @@ tableextension 52025 "RegWarehouseActivityHeaderCR" extends "Registered Whse. Ac
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        field(52002; "Source Order No. CR"; Date)
+        field(52002; "Source Order No. CR"; Code[20])
         {
             Caption = 'Source Order No.';
             DataClassification = ToBeClassified;

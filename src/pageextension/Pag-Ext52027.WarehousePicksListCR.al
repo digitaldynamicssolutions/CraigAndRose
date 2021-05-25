@@ -1,4 +1,4 @@
-pageextension 52027 WarehousePicksListCR extends "Warehouse Picks"
+pageextension 52027 "WarehousePicksListCR" extends "Warehouse Picks"
 {
     layout
     {

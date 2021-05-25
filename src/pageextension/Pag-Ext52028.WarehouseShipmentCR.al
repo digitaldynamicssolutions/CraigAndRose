@@ -1,5 +1,5 @@
 /// <summary>
-/// PageExtension WarehouseShipmentCR (ID 52028) extends Record Warehouse Shipment.
+/// PageExtension "WarehouseShipmentCR" (ID 52028) extends Record Warehouse Shipment.
 /// </summary>
 pageextension 52028 WarehouseShipmentCR extends "Warehouse Shipment"
 {

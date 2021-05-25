@@ -1,4 +1,4 @@
-tableextension 52028 WarehouseSetupCR extends "Warehouse Setup"
+tableextension 52028 "WarehouseSetupCR" extends "Warehouse Setup"
 {
     fields
     {

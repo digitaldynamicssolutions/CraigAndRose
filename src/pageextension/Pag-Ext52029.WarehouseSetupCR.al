@@ -1,4 +1,4 @@
-pageextension 52029 WarehouseSetupCR extends "Warehouse Setup"
+pageextension 52029 "WarehouseSetupCR" extends "Warehouse Setup"
 {
     layout
     {
