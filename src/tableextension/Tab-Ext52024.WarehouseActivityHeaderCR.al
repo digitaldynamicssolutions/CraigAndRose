@@ -19,6 +19,9 @@ tableextension 52024 "WarehouseActivityHeaderCR" extends "Warehouse Activity Hea
             Caption = 'Source Order No.';
             DataClassification = ToBeClassified;
             Editable = false;
+            ObsoleteState = Removed;
+            ObsoleteReason = 'Incorrect Data Type';
+
         }
         field(52003; "Source Order Date CR"; Date)
         {
@@ -42,6 +45,12 @@ tableextension 52024 "WarehouseActivityHeaderCR" extends "Warehouse Activity Hea
         field(52006; "Customer Posting Group CR"; Code[10])
         {
             Caption = 'Customer Posting Group';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52007; "Source Document No. CR"; Code[20])
+        {
+            Caption = 'Source Order No.';
             DataClassification = ToBeClassified;
             Editable = false;
         }

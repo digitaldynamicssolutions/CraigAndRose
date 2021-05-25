@@ -14,11 +14,13 @@ tableextension 52025 "RegWarehouseActivityHeaderCR" extends "Registered Whse. Ac
             DataClassification = ToBeClassified;
             Editable = false;
         }
-        field(52002; "Source Order No. CR"; Code[20])
+        field(52002; "Source Order No. CR"; Date)
         {
             Caption = 'Source Order No.';
             DataClassification = ToBeClassified;
             Editable = false;
+            ObsoleteState = Removed;
+            ObsoleteReason = 'Incorrect Data Type';
         }
         field(52003; "Source Order Date CR"; Date)
         {
@@ -41,6 +43,12 @@ tableextension 52025 "RegWarehouseActivityHeaderCR" extends "Registered Whse. Ac
         field(52006; "Customer Posting Group CR"; Code[10])
         {
             Caption = 'Customer Posting Group';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52007; "Source Document No. CR"; Code[20])
+        {
+            Caption = 'Source Order No.';
             DataClassification = ToBeClassified;
             Editable = false;
         }

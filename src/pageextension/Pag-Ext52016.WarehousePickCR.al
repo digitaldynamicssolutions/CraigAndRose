@@ -7,10 +7,10 @@ pageextension 52016 "WarehousePickCR" extends "Warehouse Pick"
         {
             group(Source)
             {
-                field("Source Order No. CR"; rec."Source Order No. CR")
+                field("Source Order No. CR"; rec."Source Document No. CR")
                 {
                     ApplicationArea = All;
-                    Caption = 'Source Order No.';
+                    Caption = 'Source Document No.';
                 }
                 field("Customer Posting Group CR"; Rec."Customer Posting Group CR")
                 {

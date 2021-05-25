@@ -24,9 +24,9 @@ pageextension 52027 "WarehousePicksListCR" extends "Warehouse Picks"
                 ToolTip = 'Specifies the value of the Source Order Date field';
                 ApplicationArea = All;
             }
-            field("Source Order No. CR"; Rec."Source Order No. CR")
+            field("Source Document No. CR"; Rec."Source Document No. CR")
             {
-                ToolTip = 'Specifies the value of the Source Order No. field';
+                ToolTip = 'Specifies the value of the Source Document No. field';
                 ApplicationArea = All;
             }
             field("Source Ship-to Name CR"; Rec."Source Ship-to Name CR")

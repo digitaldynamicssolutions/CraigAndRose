@@ -26,7 +26,7 @@ codeunit 52010 "WarehouseEventSubCR"
             if WarehouseShipmentHeader.FindFirst() then begin
                 if WarehouseAtivityHeader.get(WarehouseActivityLine."Activity Type", WarehouseActivityLine."No.") then begin
 
-                    WarehouseAtivityHeader.validate("Source Order No. CR", WarehouseShipmentHeader."Source Order No. CR");
+                    WarehouseAtivityHeader.validate("Source Document No. CR", WarehouseShipmentHeader."Source Order No. CR");
                     WarehouseAtivityHeader.Validate("Source Order Date CR", WarehouseShipmentHeader."Source Order Date CR");
                     WarehouseAtivityHeader.Validate("Source Global Dimension 1 CR", WarehouseShipmentHeader."Source Global Dimension 1 CR");
                     WarehouseAtivityHeader.Validate("Source Global Dimension 2 CR", WarehouseShipmentHeader."Source Global Dimension 2 CR");
