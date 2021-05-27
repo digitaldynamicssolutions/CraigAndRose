@@ -327,7 +327,7 @@ codeunit 52001 "Job Queue Functions CR"
     local procedure AdjustItemsPostToGL()
     var
         AdjustCostReport: Report "Adjust Cost - Item Entries";
-        PostCostToGL: Report "Post Inventory Cost to G/L";
+        PostCosttoGL: report PostCostToGLJQCR;
         SalesEventSubCR: Codeunit SalesEventSubCR;
     begin
         AdjustCostReport.UseRequestPage(false);
@@ -335,11 +335,10 @@ codeunit 52001 "Job Queue Functions CR"
         AdjustCostReport.SetPostToGL(true);
         AdjustCostReport.RunModal();
 
-        PostCostToGL.InitializeRequest(1, '', true);
         PostCostToGL.UseRequestPage(false);
+        PostCostToGL.InitializeRequest(1, '', true);
         PostCostToGL.RunModal();
     end;
-
     local procedure ReleaseCustomerOrders()
     //V1.0.0.5 02/03/21 -+
     var

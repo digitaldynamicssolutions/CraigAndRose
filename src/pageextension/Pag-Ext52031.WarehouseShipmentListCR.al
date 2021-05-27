@@ -1,4 +1,4 @@
-pageextension 52014 WarehouseShipmentListCR extends "Warehouse Shipment List"
+pageextension 52031 "WarehouseShipmentListCR" extends "Warehouse Shipment List"
 {
     layout
     {
