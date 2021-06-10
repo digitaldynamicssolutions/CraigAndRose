@@ -501,6 +501,7 @@ report 52005 "Homebase Sales Shipment CR"
                     EnvironmentInfo: Codeunit "Environment Information";
                     Item: Record Item;
                     ItemCrossRef: Record "Item Cross Reference";
+                    itemReference: Record "Item Reference";
 
                 begin
                     if Type = Type::"G/L Account" then
@@ -529,8 +530,14 @@ report 52005 "Homebase Sales Shipment CR"
                     else
                         CustomerItemRef := '';
 
-
-
+                    if CustomerItemRef = '' then begin
+                        itemReference.SetRange("Item No.", "No.");
+                        itemReference.SetRange("Reference Type No.", '1010000');
+                        If itemReference.FindFirst then
+                            CustomerItemRef := itemReference."Reference No."
+                        else
+                            CustomerItemRef := '';
+                    end;
 
                     OnBeforeLineOnAfterGetRecord(Header, Line);
 
