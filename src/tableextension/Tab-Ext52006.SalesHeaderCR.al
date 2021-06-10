@@ -64,8 +64,22 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
             var
                 OrderProgressSub: Codeunit "Order Progress Sub. CR";
                 ProgressStatus: Enum "Order Progress CR";
+                WarehouseShipmentLine: Record "Warehouse Shipment Line";
+                WarehouseActivityLine: Record "Warehouse Activity Line";
             begin
                 if "CS To Cancel CR" then begin
+                    
+                    WarehouseActivityLine.SetRange("Activity Type", WarehouseActivityLine."Activity Type"::Pick);
+                    WarehouseActivityLine.SetRange("Source Document", WarehouseActivityLine."Source Document"::"Sales Order");
+                    WarehouseActivityLine.SetRange("Source No.", "No.");
+                    if WarehouseActivityLine.FindFirst() then
+                        error('You must delete or process any outstanding warehouse picks to cancel an order');
+
+                    WarehouseShipmentLine.SetRange("Source Document", WarehouseShipmentLine."Source Document"::"Sales Order");
+                    WarehouseShipmentLine.SetRange("Source No.", "No.");
+                    if WarehouseShipmentLine.FindFirst() then
+                        error('You must delete or process any outstanding warehouse shipments to cancel an order');
+
                     TestField(Status, Status::Open);
                     OrderProgressSub.InsertOrderProgress("No.", "No.", ProgressStatus::"To Cancel", "Location Code", "External Document No.", '');
                 end;
@@ -80,7 +94,7 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
             trigger OnValidate()
             var
                 SalesLine: Record "Sales Line";
-                FieldLookup: Record "Field Lookup CR"; 
+                FieldLookup: Record "Field Lookup CR";
             begin
                 SalesLine.SetRange("Document Type", "Document Type"::Order);
                 salesline.SetRange("Document No.", "No.");
