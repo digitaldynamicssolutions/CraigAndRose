@@ -19,6 +19,11 @@ pageextension 52027 "WarehousePicksListCR" extends "Warehouse Picks"
                 ToolTip = 'Specifies the value of the Source Global Dimension 2 field';
                 ApplicationArea = All;
             }
+            field("Source Customer Group CR"; Rec."Source Customer Group CR")
+            {
+                ToolTip = 'Specifies the value of the Source Customer Group field';
+                ApplicationArea = All;
+            }
             field("Source Order Date CR"; Rec."Source Order Date CR")
             {
                 ToolTip = 'Specifies the value of the Source Order Date field';

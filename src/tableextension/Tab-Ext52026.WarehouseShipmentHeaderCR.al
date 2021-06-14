@@ -38,5 +38,11 @@ tableextension 52026 "WarehouseShipmentHeaderCR" extends "Warehouse Shipment Hea
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(52006; "Source Customer Group CR"; Code[20])
+        {
+            Caption = 'Source Customer Group';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

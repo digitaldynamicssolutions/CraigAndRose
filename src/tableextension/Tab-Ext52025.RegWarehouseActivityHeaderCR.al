@@ -52,5 +52,11 @@ tableextension 52025 "RegWarehouseActivityHeaderCR" extends "Registered Whse. Ac
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(52008; "Source Customer Group CR"; Code[20])
+        {
+            Caption = 'Source Customer Group';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

@@ -34,6 +34,11 @@ pageextension 52028 WarehouseShipmentCR extends "Warehouse Shipment"
                     ToolTip = 'Specifies the value of the Source Order Date field';
                     ApplicationArea = All;
                 }
+                field("Source Customer Group CR"; Rec."Source Customer Group CR")
+                {
+                    ToolTip = 'Specifies the value of the Source Customer Group field';
+                    ApplicationArea = All;
+                }
                 field("Source Ship-to Name CR"; Rec."Source Ship-to Name CR")
                 {
                     ToolTip = 'Specifies the value of the Source Ship-to Name field';

@@ -54,5 +54,11 @@ tableextension 52024 "WarehouseActivityHeaderCR" extends "Warehouse Activity Hea
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(52008; "Source Customer Group CR"; Code[20])
+        {
+            Caption = 'Source Customer Group';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

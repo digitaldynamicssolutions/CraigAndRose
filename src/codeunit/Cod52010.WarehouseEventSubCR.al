@@ -4,6 +4,7 @@ codeunit 52010 "WarehouseEventSubCR"
 
     procedure UpdateShipmentHeader(SalesHeader: Record "Sales Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header")
     var
+    DimSetEntry: Record "Dimension Set Entry";
     begin
         WarehouseShipmentHeader.validate("Source Order No. CR", SalesHeader."No.");
         WarehouseShipmentHeader.Validate("Source Order Date CR", SalesHeader."Order Date");
@@ -11,6 +12,12 @@ codeunit 52010 "WarehouseEventSubCR"
         WarehouseShipmentHeader.Validate("Source Global Dimension 2 CR", SalesHeader."Shortcut Dimension 2 Code");
         WarehouseShipmentHeader.Validate("Source Ship-to Name CR", SalesHeader."Ship-to Name");
         WarehouseShipmentHeader.Validate("Customer Posting Group CR", SalesHeader."Customer Posting Group");
+
+        DimSetEntry.SetRange("Dimension Set ID", SalesHeader."Dimension Set ID");
+        DimSetEntry.SetRange("Dimension Code", 'CUSTOMERGROUP');
+        if DimSetEntry.FindFirst() then begin
+            WarehouseShipmentHeader.validate("Source Customer Group CR", DimSetEntry."Dimension Value Code");
+        end;
         WarehouseShipmentHeader.Modify(false);
     end;
 
@@ -18,21 +25,22 @@ codeunit 52010 "WarehouseEventSubCR"
 
     procedure UpdateActivityHeader(var WarehouseActivityLine: Record "Warehouse Activity Line")
     var
-        WarehouseAtivityHeader: Record "Warehouse Activity Header";
+        WarehouseActivityHeader: Record "Warehouse Activity Header";
         WarehouseShipmentHeader: Record "Warehouse Shipment Header";
     begin
         if WarehouseActivityLine."Source Document" = WarehouseActivityLine."Source Document"::"Sales Order" then begin
             WarehouseShipmentHeader.SetRange("Source Order No. CR", WarehouseActivityLine."Source No.");
             if WarehouseShipmentHeader.FindFirst() then begin
-                if WarehouseAtivityHeader.get(WarehouseActivityLine."Activity Type", WarehouseActivityLine."No.") then begin
+                if WarehouseActivityHeader.get(WarehouseActivityLine."Activity Type", WarehouseActivityLine."No.") then begin
 
-                    WarehouseAtivityHeader.validate("Source Document No. CR", WarehouseShipmentHeader."Source Order No. CR");
-                    WarehouseAtivityHeader.Validate("Source Order Date CR", WarehouseShipmentHeader."Source Order Date CR");
-                    WarehouseAtivityHeader.Validate("Source Global Dimension 1 CR", WarehouseShipmentHeader."Source Global Dimension 1 CR");
-                    WarehouseAtivityHeader.Validate("Source Global Dimension 2 CR", WarehouseShipmentHeader."Source Global Dimension 2 CR");
-                    WarehouseAtivityHeader.Validate("Source Ship-to Name CR", WarehouseShipmentHeader."Source Ship-to Name CR");
-                    WarehouseAtivityHeader.Validate("Customer Posting Group CR", WarehouseShipmentHeader."Customer Posting Group CR");
-                    WarehouseAtivityHeader.Modify(false);
+                    WarehouseActivityHeader.validate("Source Document No. CR", WarehouseShipmentHeader."Source Order No. CR");
+                    WarehouseActivityHeader.Validate("Source Order Date CR", WarehouseShipmentHeader."Source Order Date CR");
+                    WarehouseActivityHeader.Validate("Source Global Dimension 1 CR", WarehouseShipmentHeader."Source Global Dimension 1 CR");
+                    WarehouseActivityHeader.Validate("Source Global Dimension 2 CR", WarehouseShipmentHeader."Source Global Dimension 2 CR");
+                    WarehouseActivityHeader.Validate("Source Ship-to Name CR", WarehouseShipmentHeader."Source Ship-to Name CR");
+                    WarehouseActivityHeader.Validate("Customer Posting Group CR", WarehouseShipmentHeader."Customer Posting Group CR");
+                    WarehouseActivityHeader.Validate("Source Customer Group CR", WarehouseShipmentHeader."Source Customer Group CR");
+                    WarehouseActivityHeader.Modify(false);
                 end;
             end;
         end;
