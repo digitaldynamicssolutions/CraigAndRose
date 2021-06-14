@@ -44,5 +44,51 @@ tableextension 52027 "PostedWhseShipmentHeaderCR" extends "Posted Whse. Shipment
             DataClassification = ToBeClassified;
             Editable = false;
         }
+        field(52007; "Ship-to Name 2 CR"; Text[50])
+        {
+            Caption = 'Ship-to Name 2';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52008; "Ship-to Address CR"; Text[100])
+        {
+            Caption = 'Ship-to Address';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52009; "Ship-to Address 2 CR"; Text[50])
+        {
+            Caption = 'Ship-to Address 2';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52010; "Ship-to City CR"; Text[30])
+        {
+            Caption = 'Ship-to City';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52011; "Ship-to Post Code CR"; Code[20])
+        {
+            Caption = 'Ship-to Post Code';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
+        field(52012; "Ship-to County CR"; Text[30])
+        {
+            CaptionClass = '5,1,' + "Ship-to Country/Region Code CR";
+            Caption = 'Ship-to County';
+        }
+        field(52013; "Ship-to Country/Region Code CR"; Code[10])
+        {
+            Caption = 'Ship-to Country/Region Code';
+            TableRelation = "Country/Region";
+        }
+        field(52014; "Ship-to Contact CR"; Text[100])
+        {
+            Caption = 'Ship-to Contact';
+            DataClassification = ToBeClassified;
+            Editable = false;
+        }
     }
 }

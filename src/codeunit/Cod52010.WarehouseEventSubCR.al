@@ -11,6 +11,14 @@ codeunit 52010 "WarehouseEventSubCR"
         WarehouseShipmentHeader.Validate("Source Global Dimension 1 CR", SalesHeader."Shortcut Dimension 1 Code");
         WarehouseShipmentHeader.Validate("Source Global Dimension 2 CR", SalesHeader."Shortcut Dimension 2 Code");
         WarehouseShipmentHeader.Validate("Source Ship-to Name CR", SalesHeader."Ship-to Name");
+        WarehouseShipmentHeader.Validate("Source Ship-to Name 2 CR", SalesHeader."Ship-to Name 2");
+        WarehouseShipmentHeader.Validate("Source Ship-to Address CR", SalesHeader."Ship-to Address");
+        WarehouseShipmentHeader.Validate("Source Ship-to Address 2 CR", SalesHeader."Ship-to Address 2");
+        WarehouseShipmentHeader.Validate("Source Ship-to City CR", SalesHeader."Ship-to City");
+        WarehouseShipmentHeader.Validate("Source Ship-to County CR", SalesHeader."Ship-to County");
+        WarehouseShipmentHeader.Validate("Source Ship-to Post Code CR", SalesHeader."Ship-to Post Code");
+        WarehouseShipmentHeader.Validate("Source Ship-to Country/Reg CR", SalesHeader."Ship-to Country/Region Code");
+        WarehouseShipmentHeader.Validate("Source Ship-to Contact CR", SalesHeader."Ship-to Contact");
         WarehouseShipmentHeader.Validate("Customer Posting Group CR", SalesHeader."Customer Posting Group");
 
         DimSetEntry.SetRange("Dimension Set ID", SalesHeader."Dimension Set ID");
@@ -18,6 +26,7 @@ codeunit 52010 "WarehouseEventSubCR"
         if DimSetEntry.FindFirst() then begin
             WarehouseShipmentHeader.validate("Source Customer Group CR", DimSetEntry."Dimension Value Code");
         end;
+
         WarehouseShipmentHeader.Modify(false);
     end;
 

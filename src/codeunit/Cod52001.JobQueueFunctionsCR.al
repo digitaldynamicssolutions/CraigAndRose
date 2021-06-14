@@ -244,7 +244,7 @@ codeunit 52001 "Job Queue Functions CR"
                 SalesHeader.SetRange(Status, SalesHeader.Status::Released);
                 SalesHeader.SetRange("Location Code", Location.Code);
                 SalesHeader.SetRange("Shipping Advice", SalesHeader."Shipping Advice"::Complete);
-                SalesHeader.Setfilter("Progress Status CR", '%1|%2', SalesHeader."Progress Status CR"::Released, SalesHeader."Progress Status CR"::"Stock Issue");
+                SalesHeader.Setfilter("Progress Status CR", '%1|%2|%3', SalesHeader."Progress Status CR"::Released, SalesHeader."Progress Status CR"::"Stock Issue", SalesHeader."Progress Status CR"::"Shipment Cancelled");
                 if SalesHeader.FindSet(false, false) then begin
                     repeat
                         SalesLine.reset;
