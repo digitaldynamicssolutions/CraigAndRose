@@ -394,6 +394,7 @@ codeunit 52001 "Job Queue Functions CR"
         CalcWhseAdjustment: Report "Calculate Whse. Adjustment";
         NoSeriesMgt: Codeunit NoSeriesManagement;
         ItemJournalPost: Codeunit "Item Jnl.-Post";
+        itemJournalPostLine: Codeunit "Item Jnl.-Post Line";
     begin
         WarehouseSetup.Get;
         WarehouseSetup.TestField("Adjustment Journal Template CR");
@@ -417,10 +418,11 @@ codeunit 52001 "Job Queue Functions CR"
         CalcWhseAdjustment.InitializeRequest(WorkDate, NoSeriesMgt.GetNextNo(WarehouseSetup."Auto. Adj. Number Series CR", Today, true));
         CalcWhseAdjustment.RUN;
 
+
         ItemJnlLineToPost.SetRange("Journal Template Name", WarehouseSetup."Adjustment Journal Template CR");
         ItemJnlLineToPost.SetRange("Journal Batch Name", WarehouseSetup."Adjustment Journal Batch CR");
-        if not ItemJnlLineToPost.IsEmpty then
-            ItemJournalPost.run(ItemJnlLineToPost);
+        if ItemJnlLineToPost.Count <> 0 then    
+            itemJournalPostLine.run(ItemJnlLine);
 
     end;
 }
