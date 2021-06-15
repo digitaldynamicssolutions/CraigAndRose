@@ -34,6 +34,10 @@ codeunit 52001 "Job Queue Functions CR"
         if rec."Parameter String" = 'CUSTRELEASEORDERS' then begin
             ReleaseCustomerOrders();
         end;
+
+        if rec."Parameter String" = 'CALCWHSEADJUST' then begin
+            CalculateWhseAdjust();
+        end;
     end;
 
     local procedure SendOTMOrders()
@@ -244,7 +248,7 @@ codeunit 52001 "Job Queue Functions CR"
                 SalesHeader.SetRange(Status, SalesHeader.Status::Released);
                 SalesHeader.SetRange("Location Code", Location.Code);
                 SalesHeader.SetRange("Shipping Advice", SalesHeader."Shipping Advice"::Complete);
-                SalesHeader.Setfilter("Progress Status CR", '%1|%2|%3', SalesHeader."Progress Status CR"::Released, SalesHeader."Progress Status CR"::"Stock Issue", SalesHeader."Progress Status CR"::"Shipment Cancelled");
+                SalesHeader.Setfilter("Progress Status CR", '%1|%2', SalesHeader."Progress Status CR"::Released, SalesHeader."Progress Status CR"::"Stock Issue");
                 if SalesHeader.FindSet(false, false) then begin
                     repeat
                         SalesLine.reset;
@@ -339,6 +343,7 @@ codeunit 52001 "Job Queue Functions CR"
         PostCostToGL.InitializeRequest(1, '', true);
         PostCostToGL.RunModal();
     end;
+
     local procedure ReleaseCustomerOrders()
     //V1.0.0.5 02/03/21 -+
     var
@@ -379,5 +384,43 @@ codeunit 52001 "Job Queue Functions CR"
                 end;
             until Customer.next = 0;
         end;
+    end;
+
+    local procedure CalculateWhseAdjust()
+    var
+        WarehouseSetup: Record "Warehouse Setup";
+        ItemJnlLine: Record "Item Journal Line";
+        ItemJnlLineToPost: Record "Item Journal Line";
+        CalcWhseAdjustment: Report "Calculate Whse. Adjustment";
+        NoSeriesMgt: Codeunit NoSeriesManagement;
+        ItemJournalPost: Codeunit "Item Jnl.-Post";
+    begin
+        WarehouseSetup.Get;
+        WarehouseSetup.TestField("Adjustment Journal Template CR");
+        WarehouseSetup.TestField("Adjustment Journal Batch CR");
+        WarehouseSetup.TestField("Auto. Adj. Number Series CR");
+
+        ItemJnlLine.Reset();
+        ItemJnlLine.SetRange("Journal Template Name", WarehouseSetup."Adjustment Journal Template CR");
+        ItemJnlLine.SetRange("Journal Batch Name", WarehouseSetup."Adjustment Journal Batch CR");
+        ItemJnlLine.DeleteAll(true);
+
+        Clear(CalcWhseAdjustment);
+
+        ItemJnlLine.Init();
+        ItemJnlLine.Validate("Journal Template Name", WarehouseSetup."Adjustment Journal Template CR");
+        ItemJnlLine.Validate("Journal Batch Name", WarehouseSetup."Adjustment Journal Batch CR");
+
+        CalcWhseAdjustment.UseRequestPage(false);
+        CalcWhseAdjustment.SetHideValidationDialog(true);
+        CalcWhseAdjustment.SetItemJnlLine(ItemJnlLine);
+        CalcWhseAdjustment.InitializeRequest(WorkDate, NoSeriesMgt.GetNextNo(WarehouseSetup."Auto. Adj. Number Series CR", Today, true));
+        CalcWhseAdjustment.RUN;
+
+        ItemJnlLineToPost.SetRange("Journal Template Name", WarehouseSetup."Adjustment Journal Template CR");
+        ItemJnlLineToPost.SetRange("Journal Batch Name", WarehouseSetup."Adjustment Journal Batch CR");
+        if not ItemJnlLine.IsEmpty then
+            ItemJournalPost.run(ItemJnlLineToPost);
+
     end;
 }

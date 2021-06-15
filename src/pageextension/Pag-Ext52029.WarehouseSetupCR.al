@@ -15,6 +15,21 @@ pageextension 52029 "WarehouseSetupCR" extends "Warehouse Setup"
                     ApplicationArea = All;
                 }
             }
+            group(Automation)
+            {
+                field("Adjustment Journal Template CR"; rec."Adjustment Journal Template CR")
+                {
+                    ApplicationArea = All;
+                }
+                field("Adjustment Journal Batch CR"; Rec."Adjustment Journal Batch CR")
+                {
+                    ApplicationArea = All;
+                }
+                field("Auto. Adj. Number Series CR"; Rec."Auto. Adj. Number Series CR")
+                {
+                    ApplicationArea = All;
+                }
+            }
         }
     }
 }
