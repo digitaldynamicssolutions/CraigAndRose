@@ -9,6 +9,7 @@ codeunit 52008 "Production - Job Queue Func."
             CreateProductionOrders();
         end;
 
+        CreateProductionOrders();
     end;
 
     local procedure CreateProductionOrders()
@@ -64,6 +65,7 @@ codeunit 52008 "Production - Job Queue Func."
                                 RelProdOrder.Validate("No.", NoSeriesMgt.GetNextNo(ManufacturingSetup."Released Order Nos.", Today, true));
                                 RelProdOrder.Validate("Source Type", RelProdOrder."Source Type"::Item);
                                 RelProdOrder.Validate("Source No.", item."No.");
+                                RelProdOrder.Insert(true);
                                 if item."Production Order Multiple CR" <> 0 then
                                     ProdQty := Round((item."Qty. on Sales Order" - OnStockQty), item."Production Order Multiple CR", '>')
                                 else
@@ -75,7 +77,7 @@ codeunit 52008 "Production - Job Queue Func."
                                     RelProdOrder.Validate("Location Code", Routing."Location Code CR");
                                 end else
                                     RelProdOrder.Validate("Location Code", CompanyInfo."Location Code");
-                                RelProdOrder.Insert(true);
+                                RelProdOrder.modify(true);
 
                                 //Get Assigned User
                                 WarehouseEmployee.SetFilter("Default Routing Assignment CR", '%1', '*' + RelProdOrder."Routing No." + '*');

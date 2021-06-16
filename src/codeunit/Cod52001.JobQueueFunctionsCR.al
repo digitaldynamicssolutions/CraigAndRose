@@ -421,8 +421,8 @@ codeunit 52001 "Job Queue Functions CR"
 
         ItemJnlLineToPost.SetRange("Journal Template Name", WarehouseSetup."Adjustment Journal Template CR");
         ItemJnlLineToPost.SetRange("Journal Batch Name", WarehouseSetup."Adjustment Journal Batch CR");
-        if ItemJnlLineToPost.Count <> 0 then    
-            itemJournalPostLine.run(ItemJnlLine);
+        if ItemJnlLineToPost.FindFirst() then    
+            itemJournalPostLine.run(ItemJnlLineToPost);
 
     end;
 }
