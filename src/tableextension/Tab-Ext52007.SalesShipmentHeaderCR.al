@@ -55,5 +55,13 @@ tableextension 52007 "SalesShipmentHeaderCR" extends "Sales Shipment Header"
             TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
             Editable = false;
         }
+        
+        field(52008; "No. of Comments CR"; Integer)
+        {
+            Caption = 'No. of Comments';
+            FieldClass = FlowField;
+            CalcFormula = count("Sales Comment Line" where("Document Type" = const(6), "No." = field("No.")));
+            Editable = false;
+        }
     }
 }

@@ -51,6 +51,14 @@ pageextension 52003 SalesOrderPageCR extends "Sales Order"
                     CurrPage.SalesLines.Page.Update();
                 end;
             }
+            
+            field("No. of Comments CR"; Rec."No. of Comments CR")
+            {  
+                Caption = 'No. of Comments';
+                ToolTip = 'Specifies the value of the No. of Comments field';
+                ApplicationArea = All;
+            }
+            
         }
 
     }

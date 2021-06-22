@@ -4,7 +4,7 @@ codeunit 52010 "WarehouseEventSubCR"
 
     procedure UpdateShipmentHeader(SalesHeader: Record "Sales Header"; WarehouseShipmentHeader: Record "Warehouse Shipment Header")
     var
-    DimSetEntry: Record "Dimension Set Entry";
+        DimSetEntry: Record "Dimension Set Entry";
     begin
         WarehouseShipmentHeader.validate("Source Order No. CR", SalesHeader."No.");
         WarehouseShipmentHeader.Validate("Source Order Date CR", SalesHeader."Order Date");
@@ -75,6 +75,36 @@ codeunit 52010 "WarehouseEventSubCR"
                 if ShippingAgentService.Get(WarehouseSetup."Def. Ship. Agent (Single) CR", xrec."Shipping Agent Service Code") then
                     rec.validate("Shipping Agent Service Code", xrec."Shipping Agent Service Code");
                 rec.Modify(true);
+            end;
+        end;
+    end;
+
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Whse.-Post Shipment (Yes/No)", 'OnBeforeConfirmWhseShipmentPost', '', true, true)]
+
+    procedure SetShipInvoiceOption(var WhseShptLine: Record "Warehouse Shipment Line"; var IsPosted: Boolean; var Selection: Integer; var HideDialog: Boolean; var Invoice: Boolean)
+    var
+        Customer: Record Customer;
+        ShipInvoiceQst: Label '&Ship';
+        WhsePostShipment: Codeunit "Whse.-Post Shipment";
+    begin
+        if WhseShptLine."Destination Type" = WhseShptLine."Destination Type"::Customer then begin
+            if Customer.Get(WhseShptLine."Destination No.") then begin
+                if Customer."Ship Only CR" then begin
+                    IsPosted := true;
+                    if WhseShptLine.Find then
+                        if not HideDialog then begin
+                            Selection := StrMenu(ShipInvoiceQst, 1);
+                            if Selection = 0 then
+                                exit;
+                            Invoice := false;
+                        end;
+
+                    WhsePostShipment.SetPostingSettings(Invoice);
+                    WhsePostShipment.SetPrint(false);
+                    WhsePostShipment.Run(WhseShptLine);
+                    WhsePostShipment.GetResultMessage;
+                    Clear(WhsePostShipment);
+                end;
             end;
         end;
     end;

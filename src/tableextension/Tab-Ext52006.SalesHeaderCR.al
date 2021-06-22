@@ -110,5 +110,12 @@ tableextension 52006 "SalesHeaderCR" extends "Sales Header"
 
             end;
         }
+        field(52008; "No. of Comments CR"; Integer)
+        {
+            Caption = 'No. of Comments';
+            FieldClass = FlowField;
+            CalcFormula = count("Sales Comment Line" where("Document Type" = field("Document Type"), "No." = field("No.")));
+            Editable = false;
+        }
     }
 }

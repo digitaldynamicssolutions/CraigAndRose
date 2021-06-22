@@ -19,5 +19,11 @@ tableextension 52012 "Production Order CR" extends "Production Order"
             Caption = 'Auto-Generated';
             DataClassification = ToBeClassified;
         }
+
+        field(52002; "Started CR"; Boolean)
+        {
+            Caption = 'Started';
+            DataClassification = ToBeClassified;
+        }
     }
 }

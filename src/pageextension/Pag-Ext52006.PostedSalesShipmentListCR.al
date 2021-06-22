@@ -12,6 +12,14 @@ pageextension 52006 PostedSalesShipmentListCR extends "Posted Sales Shipments"
                 ApplicationArea = All;
             }
         }
+
+        addafter("No. Printed")
+        {
+            field("No. of Comments CR"; rec."No. of Comments CR")
+            {
+                ApplicationArea = All;
+            }
+        }
     }
 
     actions

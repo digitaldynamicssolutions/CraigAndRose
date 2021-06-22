@@ -11,6 +11,10 @@ pageextension 52009 FinshedProductionOrderCR extends "Finished Production Order"
             {
                 ApplicationArea = All;
             }
+            field("Started CR"; rec."Started CR")
+            {
+                ApplicationArea = All;
+            }
         }
     }
 }

@@ -2,7 +2,7 @@
   "id": "bef2b38c-382c-40f3-83e9-d10b1d547e9b",
   "name": "Internal C&R Customisation",
   "publisher": "DDS",
-  "version": "1.0.0.46",
+  "version": "1.0.0.47",
   "brief": "",
   "description": "",
   "privacyStatement": "",
@@ -31,7 +31,13 @@
           "name": "Clever Shipping Agent Integration",
           "publisher": "Clever Dynamics",
           "version": "2.4.0.12323"
-          }
+          },
+                  {
+            "id": "2a37a448-d2fe-4333-bcb9-4ebf8419cdf6",
+            "name": "TrueCommerce EDI and eCommerce (DK/UK)",
+            "publisher": "TrueCommerce",
+            "version": "8.5.2.102"
+            }
         
   ],
   "screenshots": [],

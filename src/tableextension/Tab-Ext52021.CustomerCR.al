@@ -7,5 +7,10 @@ tableextension 52021 "CustomerCR" extends Customer
             Caption = 'Auto Release Sales Orders';
             DataClassification = ToBeClassified;
         }
+        field(52001; "Ship Only CR"; Boolean)
+        {
+            Caption = 'Ship Only';
+            DataClassification = ToBeClassified; 
+        }
     }
 }

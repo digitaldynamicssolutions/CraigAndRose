@@ -13,6 +13,11 @@ pageextension 52022 CustomerCardCR extends "Customer Card"
                 ApplicationArea = All;
                 ToolTip = 'When set any open order will be released based on a set of data criteria. Orders "On Hold" or "To Cancel" will be excluded.';
             }
+            field("Ship Only CR"; Rec."Ship Only CR")
+            {
+                ToolTip = 'Specifies the value of the Ship Only field';
+                ApplicationArea = All;
+            }
         }
     }
 }

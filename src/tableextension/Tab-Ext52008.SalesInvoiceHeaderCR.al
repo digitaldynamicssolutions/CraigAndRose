@@ -56,5 +56,13 @@ tableextension 52008 "SalesInvoiceHeaderCR" extends "Sales Invoice Header"
             TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
             Editable = false;
         }
+        
+        field(52008; "No. of Comments CR"; Integer)
+        {
+            Caption = 'No. of Comments';
+            FieldClass = FlowField;
+            CalcFormula = count("Sales Comment Line" where("Document Type" = const(7), "No." = field("No.")));
+            Editable = false;
+        }
     }
 }

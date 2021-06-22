@@ -56,5 +56,13 @@ tableextension 52009 "SalesCreditMemoHeaderCR" extends "Sales Cr.Memo Header"
             TableRelation = "Field Lookup CR".Code where("Lookup Code" = const('CANCELSALES'));
             Editable = false;
         }
+        
+        field(52008; "No. of Comments CR"; Integer)
+        {
+            Caption = 'No. of Comments';
+            FieldClass = FlowField;
+            CalcFormula = count("Sales Comment Line" where("Document Type" = const(8), "No." = field("No.")));
+            Editable = false;
+        }
     }
 }
