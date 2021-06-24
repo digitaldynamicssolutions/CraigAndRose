@@ -58,7 +58,7 @@ codeunit 52008 "Production - Job Queue Func."
                             OpenRelProdOrder.SetRange("Creation Date", Today);
                             OpenRelProdOrder.SetRange("Auto-Generated CR", true);
                             OpenRelProdOrder.SetRange("Location Code", CompanyInfo."Location Code");
-                            OpenRelProdOrder.SetRange("Started CR", false);
+                            //OpenRelProdOrder.SetRange("Started CR", false);
                             if OpenRelProdOrder.IsEmpty then begin
                                 NewOrdersCreated := true;
                                 RelProdOrder.InitRecord();
@@ -104,21 +104,22 @@ codeunit 52008 "Production - Job Queue Func."
                                 ProdOrdersToRefreshTemp."Item No." := RelProdOrder."No.";
                                 ProdOrdersToRefreshTemp."Language Code" := 'ENG';
                                 ProdOrdersToRefreshTemp.insert;
-                            end else begin
-                                if item."Production Order Multiple CR" <> 0 then
-                                    ProdQty := Round((item."Qty. on Sales Order" - OnStockQty), item."Production Order Multiple CR", '>')
-                                else
-                                    ProdQty := (item."Qty. on Sales Order" - OnStockQty);
-
-                                RelProdOrder.Validate(Quantity, ProdQty);
-                                RelProdOrder.modify(true);
-                                
-                                NewOrdersCreated := true;
-                                ProdOrdersToRefreshTemp.Init();
-                                ProdOrdersToRefreshTemp."Item No." := RelProdOrder."No.";
-                                ProdOrdersToRefreshTemp."Language Code" := 'ENG';
-                                ProdOrdersToRefreshTemp.insert;
                             end;
+                            //end else begin
+                            //    if item."Production Order Multiple CR" <> 0 then
+                            //        ProdQty := Round((item."Qty. on Sales Order" - OnStockQty), item."Production Order Multiple CR", '>')
+                            //    else
+                            //        ProdQty := (item."Qty. on Sales Order" - OnStockQty);
+
+                            //    RelProdOrder.Validate(Quantity, ProdQty);
+                            //    RelProdOrder.modify(true);
+                                
+                            //    NewOrdersCreated := true;
+                            //    ProdOrdersToRefreshTemp.Init();
+                            //    ProdOrdersToRefreshTemp."Item No." := RelProdOrder."No.";
+                            //    ProdOrdersToRefreshTemp."Language Code" := 'ENG';
+                            //    ProdOrdersToRefreshTemp.insert;
+                            //end;
                         end;
                     end;
                 end
