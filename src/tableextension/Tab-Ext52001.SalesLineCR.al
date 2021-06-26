@@ -43,4 +43,29 @@ tableextension 52001 "SalesLineCR" extends "Sales Line"
             end;
         }
     }
+    
+    trigger OnModify()
+    var
+        AvailQty: Decimal;
+        SalesFunctionsCR: Codeunit "Sales Functions CR";
+    begin
+        if IsTemporary then
+            exit;
+
+        if "Document Type" = "Document Type"::Order then begin
+            if Type = Type::Item then begin
+                
+                AvailQty :=  0;
+                AvailQty := SalesFunctionsCR.CalcAvailInv("No.", "Location Code", "Outstanding Quantity");
+  
+                "Warehouse Stock Issue" := false;
+                if  AvailQty < 0 then begin
+                    validate("Warehouse Stock Issue", true);
+                end else begin
+                    validate("Warehouse Stock Issue", false);
+                end;
+                Modify(false);
+            end;
+        end;
+    end;
 }

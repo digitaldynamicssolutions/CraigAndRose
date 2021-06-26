@@ -22,6 +22,7 @@ codeunit 52004 "Sales Functions CR"
         BinType: Record "Bin Type";
 
     begin
+        Clear(AvailQty); //25/06/21
         if item.get(pItemCode) then begin
             item.SetFilter("Location Filter", pLocationCode);
             item.CalcFields(Inventory, "Qty. on Sales Order", "Trans. Ord. Shipment (Qty.)", "Assembly BOM");

@@ -9,7 +9,11 @@ codeunit 52008 "Production - Job Queue Func."
             CreateProductionOrders();
         end;
 
-        CreateProductionOrders();
+        if Rec."Parameter String" = 'REFRESHPRODORDERS' then begin
+            RefreshProductionOrders();
+        end;
+
+        RefreshProductionOrders();
     end;
 
     local procedure CreateProductionOrders()
@@ -58,8 +62,9 @@ codeunit 52008 "Production - Job Queue Func."
                             OpenRelProdOrder.SetRange("Creation Date", Today);
                             OpenRelProdOrder.SetRange("Auto-Generated CR", true);
                             OpenRelProdOrder.SetRange("Location Code", CompanyInfo."Location Code");
-                            //OpenRelProdOrder.SetRange("Started CR", false);
-                            if OpenRelProdOrder.IsEmpty then begin
+                            OpenRelProdOrder.SetRange("Started CR", false);
+                            //if OpenRelProdOrder.IsEmpty then begin
+                            if not OpenRelProdOrder.findfirst then begin
                                 NewOrdersCreated := true;
                                 RelProdOrder.InitRecord();
                                 RelProdOrder.Validate(Status, RelProdOrder.Status::Released);
@@ -100,44 +105,46 @@ codeunit 52008 "Production - Job Queue Func."
                                 RelProdOrder.validate("Assigned User ID", AssUserID);
                                 RelProdOrder.Modify(true);
 
-                                ProdOrdersToRefreshTemp.Init();
-                                ProdOrdersToRefreshTemp."Item No." := RelProdOrder."No.";
-                                ProdOrdersToRefreshTemp."Language Code" := 'ENG';
-                                ProdOrdersToRefreshTemp.insert;
+                            end else begin
+                                if item."Production Order Multiple CR" <> 0 then
+                                    ProdQty := Round((item."Qty. on Sales Order" - OnStockQty), item."Production Order Multiple CR", '>')
+                                else
+                                    ProdQty := (item."Qty. on Sales Order" - OnStockQty);
+                                OpenRelProdOrder.Validate(Quantity, ProdQty);
+                                OpenRelProdOrder.modify(true);
                             end;
-                            //end else begin
-                            //    if item."Production Order Multiple CR" <> 0 then
-                            //        ProdQty := Round((item."Qty. on Sales Order" - OnStockQty), item."Production Order Multiple CR", '>')
-                            //    else
-                            //        ProdQty := (item."Qty. on Sales Order" - OnStockQty);
-
-                            //    RelProdOrder.Validate(Quantity, ProdQty);
-                            //    RelProdOrder.modify(true);
-                                
-                            //    NewOrdersCreated := true;
-                            //    ProdOrdersToRefreshTemp.Init();
-                            //    ProdOrdersToRefreshTemp."Item No." := RelProdOrder."No.";
-                            //    ProdOrdersToRefreshTemp."Language Code" := 'ENG';
-                            //    ProdOrdersToRefreshTemp.insert;
-                            //end;
                         end;
                     end;
                 end
             until SalesLine.next = 0;
         end;
+    end;
 
-        if NewOrdersCreated then begin
-            if ProdOrdersToRefreshTemp.FindSet(false, false) then begin
-                repeat
-                    if RefreshProductionOrder.GET(RefreshProductionOrder.Status::Released, ProdOrdersToRefreshTemp."Item No.") then begin
-                        Clear(AutoRefreshProdOrdersRep);
-                        AutoRefreshProdOrdersRep.InitializeRequest(1, true, true, true, false);
-                        AutoRefreshProdOrdersRep.UseRequestPage(false);
-                        AutoRefreshProdOrdersRep.SetProdOrder(RefreshProductionOrder."No.");
-                        AutoRefreshProdOrdersRep.runmodal;
-                    end;
-                until ProdOrdersToRefreshTemp.next = 0;
-            end;
+    local procedure RefreshProductionOrders()
+    var
+        CompanyInfo: Record "Company Information";
+        ProdOrder: Record "Production Order";
+        RefreshProductionOrder: Record "Production Order";
+        AutoRefreshProdOrdersRep: Report RefreshProdOrderSchedCR;
+        AutoRefreshProductionOrders: report RefreshProdOrderSchedCR;
+    begin
+        CompanyInfo.Get();
+        ProdOrder.SetRange("Auto-Generated CR", true);
+        ProdOrder.SetRange("Creation Date", today);
+        ProdOrder.SetRange("Started CR", false);
+        ProdOrder.SetRange("Source Type", ProdOrder."Source Type"::Item);
+        ProdOrder.SetRange("Location Code", CompanyInfo."Location Code");
+        if ProdOrder.FindSet() then begin
+            repeat
+                if RefreshProductionOrder.GET(RefreshProductionOrder.Status::Released, ProdOrder."No.") then begin           
+                    Clear(AutoRefreshProdOrdersRep);
+                    AutoRefreshProdOrdersRep.InitializeRequest(1, true, true, true, false);
+                    AutoRefreshProdOrdersRep.UseRequestPage(false);
+                    AutoRefreshProdOrdersRep.SetProdOrder(RefreshProductionOrder."No.");
+                    AutoRefreshProdOrdersRep.runmodal;
+                end;
+                Commit();
+            until ProdOrder.next = 0;
         end;
     end;
 

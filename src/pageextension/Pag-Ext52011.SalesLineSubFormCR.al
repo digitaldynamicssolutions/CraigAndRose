@@ -28,6 +28,14 @@ pageextension 52011 SalesLineSubFormCR extends "Sales Order Subform"
                 ApplicationArea = All;
             }
         }
+
+        modify(Quantity)
+        {
+        trigger OnAfterValidate();
+        begin
+            CurrPage.Update();
+        end;
+        }
     }
 
     actions
@@ -68,4 +76,5 @@ pageextension 52011 SalesLineSubFormCR extends "Sales Order Subform"
         FromCancelButton: Boolean;
         SalesFunctionsCR: Codeunit "Sales Functions CR";
 
+    
 }

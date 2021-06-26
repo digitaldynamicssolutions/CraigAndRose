@@ -19,6 +19,10 @@ codeunit 52002 "Data Functions CR"
         if Rec."Parameter String" = 'CANCELREASON' then begin
             ClearCancel();
         end;
+
+        if Rec."Parameter String" = 'CLEARAUTOPROD' then begin
+            ClearAutoProd();
+        end;
     end;
 
     local procedure ClearCancel()
@@ -130,5 +134,18 @@ codeunit 52002 "Data Functions CR"
                 end;
             until Customer.next = 0;
         end;
+    end;
+
+    local procedure ClearAutoProd()
+    var
+        ProdOrder: Record "Production Order";
+    begin
+        ProdOrder.SetRange("Auto-Generated CR",true);
+        ProdOrder.SetRange("Started CR", false);
+        ProdOrder.SetRange("Source Type", ProdOrder."Source Type"::Item);
+        ProdOrder.SetRange("Location Code", 'HAL');
+        ProdOrder.Setfilter("Creation Date", '%1', 20210625D);
+        if not ProdOrder.IsEmpty then
+            ProdOrder.DeleteAll(true);
     end;
 }
