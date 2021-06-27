@@ -13,7 +13,8 @@ codeunit 52008 "Production - Job Queue Func."
             RefreshProductionOrders();
         end;
 
-        RefreshProductionOrders();
+        //CreateProductionOrders();
+        //RefreshProductionOrders();
     end;
 
     local procedure CreateProductionOrders()
